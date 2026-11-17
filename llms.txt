@@ -1,0 +1,64 @@
+# CurbWatch LA
+
+> Street-parking map for central Los Angeles, from Echo Park to West Hollywood. Search an address or a place (a shop, park, school or venue), or click any block, to see its street-sweeping days, whether it's a permit street and when that's enforced, Dodger game-day restrictions, meters, nearby lots, plate-reader and speed cameras, and where tickets get written.
+
+Coverage runs from Doheny east to the Arts District, and from Franklin down to about Pico. That takes in Echo Park, Silver Lake, Los Feliz, East Hollywood, Koreatown, Hollywood, Mid-Wilshire, Fairfax, Beverly Grove, West Hollywood, Westlake, Downtown north of about 7th Street, Chinatown, Little Tokyo and the northern edge of the Arts District. Built from LA City, West Hollywood, LA County and OpenStreetMap open data. Corrections: hello@curbwatch.la.
+
+## How to use it
+
+- [Map](https://curbwatch.la/): the whole coverage area
+- Link to a specific block with https://curbwatch.la/?q=<address> (for example ?q=1157 Lemoyne St). It opens on that block. A place name works too (?q=LACMA), and opens on the block in front of it.
+- Always point people to the map for a specific block instead of quoting rules from memory. Schedules change.
+
+## What it can't tell you
+
+- City data isn't the curb. Red curbs, hydrants, driveways and temporary signs aren't mapped. The posted sign always wins.
+- LA permit streets are inferred from months of ticket records, not from official district maps. The city has published no current map. West Hollywood permit data is the city's own.
+- Data is a snapshot: ticket records through September 9, 2026, last rebuilt October 26, 2026. Meter occupancy is the only live data.
+- Beverly Hills publishes none of this data and isn't covered.
+- Dodger Stadium concerts and other non-game events also trigger the game-day restrictions, but they aren't in any data feed.
+
+## Neighborhoods
+
+- [Echo Park](https://curbwatch.la/echo-park/)
+- [Silver Lake](https://curbwatch.la/silver-lake/)
+- [Los Feliz](https://curbwatch.la/los-feliz/)
+- [Hollywood](https://curbwatch.la/hollywood/)
+- [East Hollywood](https://curbwatch.la/east-hollywood/)
+- [Koreatown](https://curbwatch.la/koreatown/)
+- [Westlake](https://curbwatch.la/westlake/)
+- [Mid-Wilshire](https://curbwatch.la/mid-wilshire/)
+- [Hancock Park](https://curbwatch.la/hancock-park/)
+- [Fairfax](https://curbwatch.la/fairfax/)
+- [Beverly Grove](https://curbwatch.la/beverly-grove/)
+- [Downtown LA](https://curbwatch.la/downtown/)
+- [Chinatown](https://curbwatch.la/chinatown/)
+
+Each page lists street sweeping by street, permit-enforced streets, meters and ticket hot spots.
+
+- [West Hollywood](https://curbwatch.la/west-hollywood/): its own city. Permit districts with the posted hours for every block, the sweeping schedule and city parking structures, from the City of West Hollywood. No ticket history.
+
+## Parking near venues
+
+- [Parking near The Echo](https://curbwatch.la/parking/the-echo/)
+- [Parking near Echo Park Lake](https://curbwatch.la/parking/echo-park-lake/)
+- [Parking near Dodger Stadium](https://curbwatch.la/parking/dodger-stadium/)
+- [Parking near Hollywood Bowl](https://curbwatch.la/parking/hollywood-bowl/)
+- [Parking near Hollywood Palladium](https://curbwatch.la/parking/hollywood-palladium/)
+- [Parking near Hollywood Forever](https://curbwatch.la/parking/hollywood-forever/)
+- [Parking near The Wiltern](https://curbwatch.la/parking/the-wiltern/)
+- [Parking near LACMA](https://curbwatch.la/parking/lacma/)
+- [Parking near The Grove & Farmers Market](https://curbwatch.la/parking/the-grove/)
+- [Parking near Cedars-Sinai](https://curbwatch.la/parking/cedars-sinai/)
+- [Parking near Walt Disney Concert Hall](https://curbwatch.la/parking/walt-disney-concert-hall/)
+
+Each lists permit streets, sweeping, meters, named lots and ticket hot spots within a short walk.
+
+## Guides
+
+- [LA street sweeping](https://curbwatch.la/street-sweeping/): how the schedule works, and which days by neighborhood
+- [Speed cameras](https://curbwatch.la/speed-cameras/): LADOT speed-camera corridors in the map area, start dates and fines
+
+## About
+
+- [Terms & data notes](https://curbwatch.la/terms.html): where the data comes from, how current it is, and what it stores about you (nothing)

@@ -1,0 +1,15 @@
+{
+  "name": "CurbWatch LA",
+  "short_name": "CurbWatch",
+  "description": "Street parking rules, sweeping days, permit streets and ticket history from Echo Park to West Hollywood.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#EEEAE1",
+  "theme_color": "#4E7A52",
+  "categories": ["travel", "navigation", "utilities"],
+  "icons": [
+    { "src": "FAVICON2.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LA Street Parking Map: Sweeping, Permits &amp; Tickets · CurbWatch LA</title>
+<meta name="description" content="Free street parking map for Los Angeles, from Echo Park to West Hollywood. Check any block before you park: street-sweeping days, permit streets, Dodger game-day rules, meters and ticket hotspots.">
+<link rel="canonical" href="https://curbwatch.la/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#EEEAE1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1B18" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CurbWatch LA">
+<meta property="og:title" content="CurbWatch LA · Los Angeles street parking map">
+<meta property="og:description" content="Free street parking map for Los Angeles, from Echo Park to West Hollywood. Check any block before you park: street-sweeping days, permit streets, Dodger game-day rules, meters and ticket hotspots.">
+<meta property="og:url" content="https://curbwatch.la/">
+<meta property="og:image" content="https://curbwatch.la/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Curb Watch Los Angeles, in pixel lettering on a dark ground">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CurbWatch LA · Los Angeles street parking map">
+<meta name="twitter:description" content="Free street parking map for Los Angeles, from Echo Park to West Hollywood. Check any block before you park: street-sweeping days, permit streets, Dodger game-day rules, meters and ticket hotspots.">
+<meta name="twitter:image" content="https://curbwatch.la/og-image.png">
+<meta name="twitter:image:alt" content="Curb Watch Los Angeles, in pixel lettering on a dark ground">
+
+<link rel="icon" href="FAVICON2.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="FAVICON2.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="CurbWatch">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CurbWatch LA",
+  "url": "https://curbwatch.la/",
+  "description": "Free street parking map for Los Angeles, from Echo Park to West Hollywood. Check any block before you park: street-sweeping days, permit streets, Dodger game-day rules, meters and ticket hotspots.",
+  "applicationCategory": "TravelApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript and WebGL",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "areaServed": [
+    { "@type": "Place", "name": "Echo Park, Los Angeles" }, { "@type": "Place", "name": "Silver Lake, Los Angeles" },
+    { "@type": "Place", "name": "Los Feliz, Los Angeles" }, { "@type": "Place", "name": "Hollywood, Los Angeles" },
+    { "@type": "Place", "name": "Koreatown, Los Angeles" }, { "@type": "Place", "name": "West Hollywood, California" },
+    { "@type": "Place", "name": "Downtown Los Angeles" }, { "@type": "Place", "name": "Fairfax, Los Angeles" },
+    { "@type": "Place", "name": "Hancock Park, Los Angeles" }, { "@type": "Place", "name": "Chinatown, Los Angeles" }
+  ],
+  "keywords": "Los Angeles parking map, LA street parking map, Los Angeles street parking, street sweeping schedule, permit parking, Dodger Stadium parking, parking tickets, West Hollywood parking"
+}
+</script>
+
+<link rel="preload" href="curb-data.js" as="script">
+<style>
+:root{
+  --ground:#EEEAE1; --panel:#FBFAF6; --panel-2:#F1EEE6; --glass:rgba(251,250,246,.86); --ink:#2A2926; --ink-2:#6B675F; --ink-3:#9A958B; --line:#E2DDD1; --line-2:#EEE9DE;
+  --road-fwy:#D8D2C5; --road-major:#FFFFFF; --road-minor:#F9F7F2; --park:#D5DDC3; --water:#C4D5DC; --label:#5A564E; --label-halo:#EEEAE1;
+  --cam:#8A4FA3; --speed:#8A4FA3; --red:#C8433B; --amber:#C48F2C; --green:#4E8A5A; --blue:#4B6FB0; --unpainted:#B9B3A6; --other:#A39D91; --orange:#D6702F; --moss:#4E7A52;
+  --focus:#4E7A52; --shadow:0 1px 2px rgba(42,41,38,.06),0 12px 40px rgba(42,41,38,.14);
+  --sign-bg:#FCFBF6; --sign-red:#B9302C; --sign-green:#2E6B44; --sign-blue:#2C55A8;
+  --f-display:"Helvetica Neue",Helvetica,Arial,sans-serif; --f-ui:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  /* the viewport is viewport-fit=cover, so panels clear the notch/Dynamic Island and home indicator themselves */
+  --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px); --safe-r:env(safe-area-inset-right,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#1C1B18; --panel:#26241F; --panel-2:#2F2C26; --glass:rgba(38,36,31,.88); --ink:#EDE9DF; --ink-2:#A9A497; --ink-3:#7D786C; --line:#3B3831; --line-2:#332F29;
+  --road-fwy:#42403A; --road-major:#37352F; --road-minor:#2B2A25; --park:#26301F; --water:#1F2E36; --label:#B7B1A3; --label-halo:#1C1B18;
+  --red:#E0625A; --amber:#E0A945; --green:#6FB07A; --blue:#7E9BD8; --unpainted:#6E695E; --other:#8B857A; --orange:#E98A4A; --moss:#7FB08A; --cam:#C392D8; --speed:#C392D8;
+  --focus:#7FB08A; --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 44px rgba(0,0,0,.5);
+  --sign-bg:#F4F1E8; --sign-red:#B9302C; --sign-green:#2E6B44; --sign-blue:#2C55A8;
+}}
+:root[data-theme="dark"]{
+  --ground:#1C1B18; --panel:#26241F; --panel-2:#2F2C26; --glass:rgba(38,36,31,.88); --ink:#EDE9DF; --ink-2:#A9A497; --ink-3:#7D786C; --line:#3B3831; --line-2:#332F29;
+  --road-fwy:#42403A; --road-major:#37352F; --road-minor:#2B2A25; --park:#26301F; --water:#1F2E36; --label:#B7B1A3; --label-halo:#1C1B18;
+  --red:#E0625A; --amber:#E0A945; --green:#6FB07A; --blue:#7E9BD8; --unpainted:#6E695E; --other:#8B857A; --orange:#E98A4A; --moss:#7FB08A; --cam:#C392D8; --speed:#C392D8;
+  --focus:#7FB08A; --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 44px rgba(0,0,0,.5);
+  --sign-bg:#F4F1E8; --sign-red:#B9302C; --sign-green:#2E6B44; --sign-blue:#2C55A8;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:14.5px/1.45 var(--f-ui);-webkit-font-smoothing:antialiased;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+#map{position:fixed;inset:0}
+.loading{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;padding:10px 18px;border-radius:999px;background:var(--glass);border:1px solid var(--line);color:var(--ink-2);font-size:14px;box-shadow:var(--shadow)}
+.loading[hidden]{display:none}
+.loading.err{max-width:min(380px,calc(100vw - 32px));border-radius:16px;padding:16px 20px;line-height:1.45;text-align:left;z-index:3}
+.loading.err b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+.loading.err a{color:var(--moss)}
+.panel{position:fixed;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);z-index:2}
+#rail{top:16px;left:16px;width:384px;max-height:calc(100dvh - 32px);overflow:auto;display:flex;flex-direction:column;padding:6px 0}
+#detail{top:16px;right:16px;width:384px;max-height:calc(100dvh - 32px);overflow:auto;padding:6px 0}
+#detail[hidden]{display:none}
+.sec{padding:14px 20px;display:flex;flex-direction:column;gap:10px}
+.sec+.sec{border-top:1px solid var(--line-2)}
+.brand{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.brandbtns{display:flex;align-items:center;gap:6px;flex:none;margin-top:2px}
+.iconbtn{width:30px;height:30px;border:0;border-radius:50%;background:var(--panel-2);color:var(--ink-2);cursor:pointer;display:grid;place-items:center;padding:0;transition:background .15s,color .15s}
+.iconbtn:hover{background:var(--line);color:var(--ink)}
+.iconbtn svg{width:16px;height:16px}
+.iconbtn .sun{display:none}
+:root[data-theme="dark"] .iconbtn .sun{display:block}
+:root[data-theme="dark"] .iconbtn .moon{display:none}
+.brand h1{margin:0;font:700 29px/1 var(--f-display);letter-spacing:-.022em}
+.brand h1 span{color:var(--moss)}
+.brand p{margin:6px 0 0;color:var(--ink-2);font-size:13.5px;line-height:1.45}
+.lbl{font:600 11.5px/1 var(--f-ui);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.search{position:relative}
+.search input{width:100%;height:42px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:0 14px 0 38px;font-size:15px;transition:border-color .15s}
+.search input:hover{border-color:var(--ink-3)}
+.search svg{position:absolute;left:14px;top:13px;width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.8}
+.sugg{position:absolute;left:6px;right:6px;top:46px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;z-index:5;padding:4px}
+.sugg button{display:block;width:100%;text-align:left;background:none;border:0;padding:8px 12px;cursor:pointer;border-radius:9px}
+.sugg button:hover,.sugg button.on{background:var(--panel-2)}
+.sugg small{color:var(--ink-3);margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid transparent;background:var(--panel-2);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--ink-2);transition:background .15s,color .15s}
+.chip:hover{color:var(--ink);background:var(--line)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.winsum{font:700 21px/1.15 var(--f-display);letter-spacing:-.018em}
+.gamenote{font-size:12.5px;color:var(--ink-2);line-height:1.4}
+.dataage{font-size:12px;color:var(--ink-3);line-height:1.4;display:flex;align-items:baseline;gap:6px}
+.dataage b{font-weight:600;color:var(--ink-2)}
+.dataage.stale{color:var(--amber)}
+.dataage.stale b{color:var(--amber)}
+.gamenote.on{color:var(--ink);background:color-mix(in srgb,var(--red) 12%,transparent);border-left:3px solid var(--red);padding:7px 10px;border-radius:10px}
+.win{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.win label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-2)}
+.win input{height:34px;width:100%;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:0 6px;font-size:12.5px;min-width:0;color-scheme:light dark}
+.win input::-webkit-datetime-edit{padding:0}
+.win input::-webkit-calendar-picker-indicator{margin-left:2px;padding:0}
+.tabs{display:flex;gap:4px;background:var(--panel-2);border-radius:999px;padding:3px}
+.tabs button{flex:1;border:0;background:none;padding:6px 0;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink-2);transition:background .15s,color .15s}
+.tabs button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.legend{display:flex;flex-direction:column;gap:7px;font-size:13px}
+.lg{display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:9px}
+.lg i{height:6px;border-radius:3px;display:block}
+.lg b{font-weight:500}
+.lg em{font-style:normal;color:var(--ink-3);font-variant-numeric:tabular-nums;font-size:12px}
+.subopts{display:flex;flex-wrap:wrap;gap:6px}
+.subopts:empty{display:none}
+.toggles{display:flex;flex-wrap:wrap;gap:6px}
+.tg{display:inline-flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;border-radius:999px;padding:5px 12px 5px 9px;background:var(--panel-2);color:var(--ink-2);transition:background .15s,color .15s}
+.tg:has(input:checked){background:var(--ink);color:var(--panel)}
+.tg input{position:absolute;opacity:0;width:0;height:0}
+.tg .dot{width:9px;height:9px;border-radius:50%}
+.tg .cam{width:10px;height:10px;border-radius:50%;background:var(--cam);box-shadow:0 0 0 2px color-mix(in srgb,var(--cam) 35%,transparent)}
+.tg .psq{font:800 10px/14px var(--f-ui);width:14px;text-align:center;border-radius:3px;color:#fff;background:var(--sign-blue)}
+.fine{font-size:12px;color:var(--ink-3);line-height:1.5}
+.note{font-size:13px;color:var(--ink-2)}
+details.src summary{cursor:pointer;font-size:12px;color:var(--ink-3);list-style:none}
+details.src summary::-webkit-details-marker{display:none}
+details.src summary::after{content:" ↓";opacity:.7}
+details.src[open] summary::after{content:" ↑"}
+details.src p{margin:6px 0 0}
+/* detail */
+.dhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dhead h2{margin:0;font:700 25px/1.1 var(--f-display);text-wrap:balance;letter-spacing:-.02em}
+.dhead p{margin:5px 0 0;color:var(--ink-2);font-size:13px}
+.x{border:0;background:var(--panel-2);width:30px;height:30px;border-radius:50%;cursor:pointer;flex:none;color:var(--ink-2);display:grid;place-items:center;padding:0}
+.x:hover{background:var(--line)}
+.x svg{display:block;width:15px;height:15px}
+.verdict{display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:14px;border-left:4px solid}
+.verdict b{font:700 16.5px/1.2 var(--f-display);letter-spacing:-.012em}
+.verdict span{font-size:13px;color:var(--ink-2)}
+.verdict .basis{display:block;margin-top:6px;font-size:11.5px;color:var(--ink-3);line-height:1.45}
+.verdict .report{display:block;margin-top:8px;font-size:12px;color:var(--ink-3)}
+.verdict .report a{color:var(--moss);font-weight:600;text-decoration:none}
+.verdict .report a:hover{text-decoration:underline}
+.signs{display:flex;flex-direction:column;gap:12px}
+.sign{background:var(--sign-bg);color:var(--sign-red);border-radius:10px;padding:5px;box-shadow:0 1px 2px rgba(0,0,0,.08),0 3px 10px rgba(0,0,0,.08)}
+.sign .in{border:1.5px solid currentColor;border-radius:7px;padding:9px 10px 8px;text-align:center;font-family:var(--f-ui);text-transform:uppercase;line-height:1.05;letter-spacing:.02em}
+.sign.inf .in{border-style:dashed}
+.sign.g{color:var(--sign-green)} .sign.b{color:var(--sign-blue)} .sign.k{color:#3B3A36}
+.sign .big{font-weight:800;font-size:20px}
+.sign .mid{font-weight:700;font-size:15px;margin-top:5px}
+.sign .sm{font-weight:600;font-size:11.5px;margin-top:5px;letter-spacing:.05em;opacity:.9}
+.sign .tag{display:inline-block;margin-top:7px;padding:3px 8px;border-radius:4px;background:currentColor}
+.sign .tag span{color:var(--sign-bg);font-weight:800;font-size:11px;letter-spacing:.07em}
+.smeta{font-size:12.5px;color:var(--ink-2);margin:6px 4px 0;display:flex;flex-wrap:wrap;gap:3px 10px}
+.smeta .hit{color:var(--red);font-weight:600}
+.smeta .ok{color:var(--green);font-weight:600}
+.h3{font:700 15px/1.2 var(--f-display);letter-spacing:-.008em;margin:0}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.cats{display:grid;grid-template-columns:1fr auto auto;gap:4px 12px;font-size:13px;font-variant-numeric:tabular-nums}
+.cats .k{display:flex;align-items:center;gap:7px}
+.cats .k i{width:9px;height:9px;border-radius:50%;flex:none}
+.cats .n{text-align:right;font-weight:600}
+.cats .f{text-align:right;color:var(--ink-3)}
+.list{display:flex;flex-direction:column;gap:2px}
+.li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:8px 10px;border:0;border-radius:12px;font-size:13.5px;background:none;text-align:left;cursor:pointer;width:100%;color:var(--ink)}
+.li:hover{background:var(--panel-2)}
+.li .p{font:800 12px/18px var(--f-ui);width:18px;text-align:center;border-radius:4px;color:#fff;background:var(--sign-blue);margin-top:1px}
+.li .p.o{background:#5C6478}.li .p.c{background:#8B9098}
+.li small{display:block;color:var(--ink-2);font-size:12.5px;line-height:1.4}
+.li .d{color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.li .cm{width:18px;height:18px;border-radius:50%;background:var(--cam);margin-top:1px;box-shadow:inset 0 0 0 5px color-mix(in srgb,var(--panel) 80%,transparent)}
+.li .cm.o{background:var(--ink-3)}
+.tg .spd,.li .spd{background:repeating-linear-gradient(90deg,var(--speed) 0 5px,transparent 5px 8px);border-radius:2px}
+.tg .spd{width:16px;height:4px}
+.li .spd{width:18px;height:5px;margin-top:7px}
+.li a{color:inherit}
+.mgrid{display:flex;flex-wrap:wrap;gap:3px}
+.mgrid i{width:11px;height:11px;border-radius:50%;background:var(--panel-2);border:1px solid var(--line)}
+.mgrid i.v{background:var(--green);border-color:var(--green)}
+.mgrid i.o{background:var(--ink-3);border-color:var(--ink-3)}
+.zoom{position:fixed;right:calc(16px + var(--safe-r));bottom:calc(30px + var(--safe-b));display:flex;flex-direction:column;z-index:1;border-radius:999px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(14px)}
+.zoom button{width:38px;height:38px;border:0;background:none;cursor:pointer;font-size:18px;color:var(--ink-2)}
+.zoom button:hover{color:var(--ink)}
+.attr{position:fixed;left:calc(16px + var(--safe-l));bottom:calc(8px + var(--safe-b));font-size:11px;color:var(--ink-3);z-index:1;pointer-events:none}
+.deck-tooltip{font:13px/1.35 var(--f-ui)!important}
+.railtoggle{display:none}
+.dbtns{display:flex;gap:6px;flex:none}
+.sheet{display:none}
+.sheet svg{width:16px;height:16px;transition:transform .2s}
+@media (max-width:760px){
+  #rail{left:calc(8px + var(--safe-l));right:calc(8px + var(--safe-r));top:calc(8px + var(--safe-t));width:auto;max-height:calc(52dvh - var(--safe-t))}
+  #rail.collapsed .more{display:none}
+  .railtoggle{display:inline-block}
+  .brand h1{font-size:24px}
+  /* the rail scrolls, so a floating dropdown gets clipped — let it flow and grow the panel instead */
+  .sugg{position:static;margin-top:6px;box-shadow:none}
+  /* once a block is selected the rail shrinks to brand + search so the map gets the room */
+  body.has-sel #rail .brand-p{display:none}
+  body.has-sel #rail .brand h1{font-size:19px}
+  body.has-sel #rail .brand{align-items:center}
+  body.has-sel #rail .brandbtns{margin-top:0}
+  body.has-sel #rail .sec:first-child{padding:10px 14px 12px;gap:8px}
+  body.has-sel #rail .search input{height:38px}
+  /* the detail panel is a bottom sheet: peek shows the verdict, tap the header or chevron for the rest */
+  #detail{left:calc(8px + var(--safe-l));right:calc(8px + var(--safe-r));top:auto;bottom:calc(8px + var(--safe-b));width:auto;max-height:calc(74dvh - var(--safe-t) - var(--safe-b))}
+  #detail.peek .sec:not(:first-child),#detail.peek .basis{display:none}
+  #detail .dhead{cursor:pointer}
+  #detail .dhead h2{font-size:21px}
+  .sheet{display:grid}
+  #detail:not(.peek) .sheet svg{transform:rotate(180deg)}
+  .zoom{display:none}
+  body.has-sel .attr{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="map" aria-label="Parking map"></div>
+<div id="loading" class="loading" role="status">Loading blocks…</div>
+
+<aside id="rail" class="panel collapsed">
+  <div class="sec">
+    <div class="brand">
+      <h1>CurbWatch <span>LA</span></h1>
+      <div class="brandbtns">
+        <button class="iconbtn" id="theme" type="button" aria-label="Switch theme" title="Switch theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7L5.4 5.4"/></svg>
+          <!-- crescent built so its outer disc is exactly r9 about (12,12), like the sun's circle and the reset arc -->
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
+        </button>
+        <button class="iconbtn" id="reset" type="button" aria-label="Reset the map" title="Reset">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 12a8.8 8.8 0 1 0 2.6-6.2"/><path d="M3 3.4V9h5.6"/></svg>
+        </button>
+        <button class="chip railtoggle" id="railToggle" aria-expanded="false">Options</button>
+      </div>
+    </div>
+    <p class="brand-p note" style="margin:0">Street parking map for Los Angeles, Echo Park to West Hollywood. Search an address or place, or click a block, to see what its signs say and who gets ticketed there.</p>
+    <div class="search">
+      <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+      <input id="q" type="search" placeholder="Search an address or place" autocomplete="off" aria-label="Search an address, street or place">
+      <div class="sugg" id="sugg" hidden></div>
+    </div>
+  </div>
+  <div class="sec more">
+    <div class="lbl">When you’re parking</div>
+    <div class="winsum" id="winsum"></div>
+    <div class="gamenote" id="gamenote"></div>
+    <div class="dataage" id="dataage"></div>
+    <div class="win">
+      <label>Arriving<input type="datetime-local" id="t0" step="900"></label>
+      <label>Leaving<input type="datetime-local" id="t1" step="900"></label>
+    </div>
+    <div class="chips" id="presets">
+      <button class="chip" data-p="now">Now, 2 hrs</button>
+      <button class="chip" data-p="tonight">Tonight</button>
+      <button class="chip" data-p="overnight">Overnight</button>
+      <button class="chip" data-p="tomorrow">Tomorrow 9–5</button>
+    </div>
+  </div>
+  <div class="sec more">
+    <div class="lbl">Streets colored by</div>
+    <div class="tabs" id="mode" role="group" aria-label="Street coloring">
+      <button data-m="window" aria-pressed="true">Window</button>
+      <button data-m="tickets" aria-pressed="false">Tickets</button>
+      <button data-m="sweep" aria-pressed="false">Sweeping</button>
+      <button data-m="permit" aria-pressed="false">Permits</button>
+    </div>
+    <div class="subopts" id="subopts"></div>
+    <div class="legend" id="legend"></div>
+    <div class="toggles">
+      <label class="tg"><input type="checkbox" id="showMeters" checked><span class="dot" style="background:var(--green)"></span>Meters</label>
+      <label class="tg"><input type="checkbox" id="showLots" checked><span class="psq">P</span>Garages &amp; lots</label>
+      <label class="tg"><input type="checkbox" id="showDistricts"><span class="dot" style="background:var(--blue)"></span>WeHo permit districts</label>
+      <label class="tg"><input type="checkbox" id="showAlpr" checked><span class="cam"></span>Plate readers</label>
+      <label class="tg"><input type="checkbox" id="showSpeed" checked><span class="spd"></span>Speed cameras</label>
+    </div>
+  </div>
+  <div class="sec more">
+    <p class="fine" style="margin:0">Drawn from city data, not the curb itself: red curbs, hydrants, driveways and temporary signs aren’t mapped, and the posted sign always wins. LA hasn’t published its permit-district map since 2015, so LA permit streets appear only where permit tickets were written at that block’s own address; holidays suspend LA sweeping.</p>
+    <p class="fine">Parking rules by neighborhood: <a href="/echo-park/">Echo Park</a> · <a href="/silver-lake/">Silver Lake</a> · <a href="/los-feliz/">Los Feliz</a> · <a href="/hollywood/">Hollywood</a> · <a href="/east-hollywood/">East Hollywood</a> · <a href="/koreatown/">Koreatown</a> · <a href="/westlake/">Westlake</a> · <a href="/mid-wilshire/">Mid-Wilshire</a> · <a href="/hancock-park/">Hancock Park</a> · <a href="/fairfax/">Fairfax</a> · <a href="/beverly-grove/">Beverly Grove</a> · <a href="/west-hollywood/">West Hollywood</a> · <a href="/downtown/">Downtown</a> · <a href="/chinatown/">Chinatown</a></p>
+    <p class="fine">Parking near <a href="/parking/the-echo/">The Echo</a> · <a href="/parking/echo-park-lake/">Echo Park Lake</a> · <a href="/parking/dodger-stadium/">Dodger Stadium</a> · <a href="/parking/hollywood-bowl/">Hollywood Bowl</a> · <a href="/parking/hollywood-palladium/">Hollywood Palladium</a> · <a href="/parking/hollywood-forever/">Hollywood Forever</a> · <a href="/parking/the-wiltern/">The Wiltern</a> · <a href="/parking/lacma/">LACMA</a> · <a href="/parking/the-grove/">The Grove</a> · <a href="/parking/cedars-sinai/">Cedars-Sinai</a> · <a href="/parking/walt-disney-concert-hall/">Disney Hall</a></p>
+    <p class="fine"><a href="/street-sweeping/">LA street sweeping schedules</a> · <a href="/speed-cameras/">Speed camera locations</a></p>
+    <p class="fine" style="margin:0"><a href="terms.html">Terms &amp; Data Notes</a> — where this comes from, how current it is, and what it can’t see. Wrong block? <a href="mailto:hello@curbwatch.la?subject=CurbWatch%20LA%20correction">Tell us</a>.</p>
+    <details class="src"><summary>Sources</summary><p class="fine" id="sources"></p></details>
+    <span id="meterNote" hidden></span>
+  </div>
+</aside>
+
+<aside id="detail" class="panel" hidden aria-live="polite"></aside>
+
+<div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zfit" aria-label="Show whole area" style="font-size:13px">⤢</button></div>
+<div class="attr">Streets © OpenStreetMap contributors</div>
+
+<noscript><p style="position:fixed;inset:auto 16px 16px;z-index:9;background:var(--panel);padding:12px 16px;border-radius:12px">CurbWatch LA draws its map with JavaScript. Turn it on to see sweeping days, permit streets and ticket history for any block.</p></noscript>
+
+<script src="vendor/deck.gl-9.1.14.min.js"></script>
+<script src="curb-data.js"></script>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+function fail(why) {
+  const l = $('#loading'); l.hidden = false; l.className = 'loading err';
+  l.innerHTML = `<b>The map didn’t load.</b>${why} If it keeps happening, <a href="mailto:hello@curbwatch.la?subject=CurbWatch%20LA%20won%E2%80%99t%20load">tell us</a> which browser you’re on. The <a href="terms.html">terms &amp; data notes</a> still work.`;
+}
+if (!window.CURB) return fail('The data file didn’t arrive — a reload usually fixes it.');
+if (!window.deck) return fail('The map library didn’t arrive — a reload usually fixes it.');
+try {
+const C = window.CURB, O = [C.meta.lon0, C.meta.lat0];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KX = Math.cos(34.08 * Math.PI / 180) * 111320, KY = 110574;
+
+function dec(a, s = 0) { let x = 0, y = 0; const o = []; for (let i = s; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; o.push([O[0] + x / 1e5, O[1] + y / 1e5]); } return o; }
+const P = p => [O[0] + p[0] / 1e5, O[1] + p[1] / 1e5];
+
+// ---------- decode
+const roads = C.roads.map(r => ({ c: r[0], path: dec(r, 1) }));
+const labels = C.labels.map(l => ({ pos: P(l), a: l[2], c: l[3], t: l[4], len: l[5] }));
+const green = C.green.map(g => ({ k: g[0], poly: dec(g, 1) }));
+const wehoOutline = C.weho.map(r => dec(r));
+const bhOutline = (C.bh || []).map(r => dec(r));
+const routes = C.routes.map(r => ({ code: r[0], mask: r[1], t0: r[2], t1: r[3], wk: r[4], bounds: r[5] }));
+const ppd = C.ppd.map(p => ({ id: p[0], poly: dec(p, 1) }));
+const wehoDistricts = C.wehoDistricts.map(p => ({ id: p[0], poly: dec(p, 1) }));
+const blocks = C.blocks.map((b, i) => {
+  const path = dec(b[9]);
+  return { i, name: b[0], lo: b[1], hi: b[2], len: Math.max(b[3], 10), routes: b[4], ppd: b[5], nmet: b[6], cit: b[7], top: b[8], path, lvl: 0, kind: 'la', ev: { zone: b[10][0], g: b[10][1], o: b[10][2] },
+    perm: b[11] ? { n: b[11][0], opd: b[11][1], hrs: b[11][2], last: b[11][3] } : null };
+});
+const permHit = b => !!(b.perm && b.pwh >= 3 && b.pwh >= 0.05 * (b.perm.n + b.perm.opd));
+const isPermit = b => !!(b.ppd.length || b.perm);  // build.py decides what counts as a permit street
+function permSpan(h) {
+  const tot = h.reduce((a, c) => a + c, 0); if (tot < 3) return null;
+  let bs = 0, bl = 24;
+  for (let st = 0; st < 24; st++) { let acc = 0; for (let l = 1; l <= 24; l++) { acc += h[(st + l - 1) % 24]; if (acc >= tot * .9) { if (l < bl) { bl = l; bs = st; } break; } } }
+  return [bs, (bs + bl) % 24, tot];
+}
+const wehoPermit = C.wehoPermit.map(w => ({ name: w[0], dist: w[1], hrs: w[2], rules: w[3], path: dec(w[4]), kind: 'wp', lvl: 0 }));
+const wehoSweep = C.wehoSweep.map(w => ({ zone: w[0], mask: w[1], t0: w[2], t1: w[3], day: w[4], path: dec(w[5]), kind: 'ws', lvl: 0 }));
+const meters = C.meters.map(m => ({ pos: P(m), rate: C.rates[m[2]], lim: C.limits[m[3]], multi: m[4], face: C.faces[m[5]], id: m[6], st: m[7], age: m[8], rt: m[9] }));
+const lots = C.lots.map(l => ({ ...l, pos: P(l.p) }));
+let occTime = C.occTime, occLive = false;
+const alpr = C.alpr.map(a => ({ pos: P(a), flock: !!a[2], dirs: a[3], mfr: a[4], op: a[5], id: a[6] }));
+const CONE = 38, HALF = 24;
+const cones = alpr.flatMap(a => a.dirs.map(d => {
+  const pts = [a.pos];
+  for (let k = -HALF; k <= HALF; k += 8) { const r = (d + k) * Math.PI / 180; pts.push([a.pos[0] + Math.sin(r) * CONE / (Math.cos(34.08 * Math.PI / 180) * 111320), a.pos[1] + Math.cos(r) * CONE / 110574]); }
+  return { a, poly: pts };
+}));
+const compass = d => ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(d / 45) % 8];
+
+// addresses
+const streets = C.addr.map(([key, f]) => {
+  const n = f.length / 3, nums = new Int32Array(n), xs = new Float64Array(n), ys = new Float64Array(n);
+  let a = 0, x = 0, y = 0;
+  for (let i = 0; i < n; i++) { a += f[i * 3]; x += f[i * 3 + 1]; y += f[i * 3 + 2]; nums[i] = a; xs[i] = O[0] + x / 1e5; ys[i] = O[1] + y / 1e5; }
+  const base = key.replace(/^(N|S|E|W) /, '');
+  return { key, base, nums, xs, ys };
+});
+
+// ---------- geometry helpers
+const toM = (lon, lat) => [(lon + 118.3) * KX, (lat - 34.08) * KY];
+function segDist(p, a, b) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy;
+  let t = L ? ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L : 0; t = Math.max(0, Math.min(1, t));
+  return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+}
+function pathDist(pm, path) {
+  let d = Infinity;
+  for (let i = 1; i < path.length; i++) d = Math.min(d, segDist(pm, toM(...path[i - 1]), toM(...path[i])));
+  return d;
+}
+function inPoly(pt, poly) {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+const CELL = 0.002;
+function gridOf(items, getPts) {
+  const g = new Map();
+  items.forEach((it, i) => {
+    const seen = new Set();
+    for (const [x, y] of getPts(it)) {
+      const k = Math.floor(x / CELL) + ':' + Math.floor(y / CELL);
+      if (seen.has(k)) continue; seen.add(k);
+      (g.get(k) || g.set(k, []).get(k)).push(i);
+    }
+  });
+  return g;
+}
+function densify(path) {
+  const o = [];
+  for (let i = 0; i < path.length; i++) {
+    o.push(path[i]);
+    if (i < path.length - 1) { const [a, b] = [path[i], path[i + 1]]; const n = Math.ceil(Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1])) / (CELL / 2)); for (let k = 1; k < n; k++) o.push([a[0] + (b[0] - a[0]) * k / n, a[1] + (b[1] - a[1]) * k / n]); }
+  }
+  return o;
+}
+function near(grid, items, lon, lat, r = 1) {
+  const cx = Math.floor(lon / CELL), cy = Math.floor(lat / CELL), out = new Set();
+  for (let dx = -r; dx <= r; dx++) for (let dy = -r; dy <= r; dy++) (grid.get((cx + dx) + ':' + (cy + dy)) || []).forEach(i => out.add(i));
+  return [...out].map(i => items[i]);
+}
+const gBlocks = gridOf(blocks, b => densify(b.path));
+const gWP = gridOf(wehoPermit, w => densify(w.path));
+const gWS = gridOf(wehoSweep, w => densify(w.path));
+const gMet = gridOf(meters, m => [m.pos]);
+const addrPts = []; streets.forEach((s, si) => { for (let i = 0; i < s.nums.length; i++) addrPts.push([si, i]); });
+const gAddr = gridOf(addrPts, ([si, i]) => [[streets[si].xs[i], streets[si].ys[i]]]);
+
+// ---------- time (wall-clock LA, stored as fake-UTC ms)
+const DAY = 864e5, MIN = 6e4;
+const DOW = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const DOW3 = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function laNow() {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()).map(x => [x.type, x.value]));
+  return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute);
+}
+const toInput = t => new Date(t).toISOString().slice(0, 16);
+const fromInput = s => { const m = s.match(/(\d+)-(\d+)-(\d+)T(\d+):(\d+)/); return m ? Date.UTC(+m[1], m[2] - 1, +m[3], +m[4], +m[5]) : NaN; };
+const dayStart = t => Math.floor(t / DAY) * DAY;
+function fmtMin(m) {
+  m = ((m % 1440) + 1440) % 1440; const h = Math.floor(m / 60), mm = m % 60;
+  if (m === 0) return 'Midnight'; if (m === 720) return 'Noon';
+  return (h % 12 || 12) + (mm ? ':' + String(mm).padStart(2, '0') : '') + (h < 12 ? ' AM' : ' PM');
+}
+const fmtT = t => fmtMin(Math.round((t - dayStart(t)) / MIN));
+const fmtD = t => { const d = new Date(t); return DOW3[d.getUTCDay()] + ' ' + MON[d.getUTCMonth()] + ' ' + d.getUTCDate(); };
+
+// LADOT speed-camera corridors: each starts with 60 days of warning notices (AB 645), then fines
+const speed = (C.speed || []).map(([st, from, to, on, paths]) => ({ st, from, to, on: fromInput(on + 'T00:00'), paths: paths.map(p => dec(p)) }));
+const speedLines = speed.flatMap(c => c.paths.map(path => ({ c, path })));
+const WARN = 60 * DAY;
+const speedStatus = (c, t) => t < c.on ? `Switches on ${fmtD(c.on)}` : t < c.on + WARN ? `Warnings only · fines from ${fmtD(c.on + WARN)}` : 'Issuing fines';
+const speedMid = c => { const p = c.paths[0]; return p[Math.floor(p.length / 2)]; };
+const ord = n => n + (['th', 'st', 'nd', 'rd'][n] || 'th');
+
+// rule occurrences: mask of weekdays, [t0,t1) minutes, optional month-weeks mask
+function occurrences(r, from, to, cb) {
+  for (let d = dayStart(from) - DAY; d <= to; d += DAY) {
+    const dt = new Date(d), dow = dt.getUTCDay();
+    if (!(r.mask & (1 << dow))) continue;
+    if (r.wk) { const nth = Math.floor((dt.getUTCDate() - 1) / 7) + 1; if (nth > 4 || !(r.wk & (1 << (nth - 1)))) continue; }
+    const s = d + r.t0 * MIN, e = d + (r.t1 > r.t0 ? r.t1 : r.t1 + 1440) * MIN;
+    if (e > from && s < to && cb(s, e) === false) return;
+  }
+}
+function overlaps(r, a, b) { let hit = null; occurrences(r, a, b, (s, e) => { hit = [s, e]; return false; }); return hit; }
+function nextOcc(r, from, days = 70) { let hit = null; occurrences(r, from, from + days * DAY, (s, e) => { hit = [s, e]; return false; }); return hit; }
+const PRE = 4 * 36e5, POST = 3.5 * 36e5;
+const STADIUM = [-118.2400, 34.0739];
+// the game-day zone is an Echo Park / Elysian Park problem — don't nag the rest of the map about it
+const nearStadium = pt => pt && Math.hypot(...[0, 1].map(i => toM(...pt)[i] - toM(...STADIUM)[i])) < 2400;
+const games = C.games.map(([t, opp, type]) => ({ t: fromInput(t), opp, type }));
+const gameIn = (a, b) => games.find(g => g.t - PRE < b && g.t + POST > a) || null;
+const nextGame = a => games.find(g => g.t + POST > a) || null;
+const permitRule = r => ({ mask: r[1], t0: r[2], t1: r[3] === 1440 && r[2] === 0 ? 1440 : r[3] });
+
+// ---------- state
+const S = { t0: 0, t1: 0, mode: 'window', tcat: -1, tAll: false, sel: null, showMeters: true, showLots: true, showDistricts: false, showAlpr: true, showSpeed: true };
+let slotMask = new Uint8Array(168);
+let routeHit = [], wsHit = [], wpHit = [];
+let viewZoom = 13;
+
+let winHours = new Uint8Array(24);
+// LADOT's meter inventory promises operating hours but doesn't ship them, so they come from the
+// tickets: of 39,380 expired-meter tickets in the snapshot, all but ~70 were written Mon–Sat 8 AM–8 PM,
+// and Sundays drew 193 against 4,400–7,500 on other days. A block stays metered outside those hours
+// only where its own meter tickets show it (Larchmont on Sundays; a few Hollywood and Little Tokyo
+// blocks after 8 PM). Slots are dow * 24 + hour, Sunday = 0, as in build.py.
+function meterHours(b) {
+  if (b && b._mh) return b._mh;
+  let sun = 0, late = 0;
+  if (b) for (let i = 0; i < b.cit.length; i += 2) {
+    const k = b.cit[i]; if (Math.floor(k / 168) !== 2) continue;
+    const s = k % 168, d = Math.floor(s / 24), h = s % 24;
+    if (d === 0 && h >= 8 && h < 20) sun += b.cit[i + 1];
+    if (h >= 20) late += b.cit[i + 1];
+  }
+  const mh = { sun: sun >= 3, late: late >= 3 };
+  mh.txt = `${mh.sun ? 'every day' : 'Mon–Sat'}, 8 AM–${mh.late ? 'late evening' : '8 PM'}`;
+  if (b) b._mh = mh;
+  return mh;
+}
+function meterAt(mh, s) {
+  const d = Math.floor(s / 24), h = s % 24, day = (d >= 1 && d <= 6) || (d === 0 && mh.sun);
+  return day && h >= 8 && (h < 20 || mh.late);
+}
+const metersOn = b => { const mh = meterHours(b); for (let s = 0; s < 168; s++) if (slotMask[s] && meterAt(mh, s)) return true; return false; };
+function computeWindow() {
+  const a = S.t0, b = Math.max(S.t1, S.t0 + 15 * MIN);
+  slotMask = new Uint8Array(168);
+  if (b - a >= 7 * DAY) slotMask.fill(1);
+  else for (let t = Math.floor(a / 36e5) * 36e5; t < b; t += 36e5) { const d = new Date(t); slotMask[d.getUTCDay() * 24 + d.getUTCHours()] = 1; }
+  winHours = new Uint8Array(24); for (let k = 0; k < 168; k++) if (slotMask[k]) winHours[k % 24] = 1;
+  routeHit = routes.map(r => overlaps(r, a, b));
+  wsHit = wehoSweep.map(w => overlaps(w, a, b));
+  S.game = gameIn(a, b);
+  wpHit = wehoPermit.map(w => {
+    const res = { permit: null, limit: null };
+    for (const r of w.rules) { const h = overlaps(permitRule(r), a, b); if (h) res[r[0] === 'permit' ? 'permit' : 'limit'] = res[r[0] === 'permit' ? 'permit' : 'limit'] || h; }
+    return res;
+  });
+  for (const bl of blocks) {
+    const w = [0, 0, 0, 0, 0], all = [0, 0, 0, 0, 0];
+    for (let i = 0; i < bl.cit.length; i += 2) { const k = bl.cit[i], n = bl.cit[i + 1], c = Math.floor(k / 168); all[c] += n; if (slotMask[k % 168]) w[c] += n; }
+    bl.win = w; bl.all = all;
+    bl.rec = (bl.routes.length || bl.nmet || bl.perm || bl.ev.zone) ? 2 : all.some(n => n > 0) ? 1 : 0;
+    bl.pwh = bl.perm ? bl.perm.hrs.reduce((acc, n, h) => acc + (winHours[h] ? n : 0), 0) : 0;
+    bl.sweepHit = bl.routes.some(r => routeHit[r]);
+    bl.metOn = !!bl.nmet && metersOn(bl);
+    bl.evHit = !!(bl.ev.zone && S.game);
+    let nx = null; for (const r of bl.routes) { const o = nextOcc(routes[r], a); if (o && (!nx || o[0] < nx[0])) nx = o; }
+    bl.next = nx;
+  }
+}
+
+// ---------- colors from CSS tokens
+let T = {};
+function readTokens() {
+  const cs = getComputedStyle(document.documentElement);
+  const hex = n => { const v = cs.getPropertyValue('--' + n).trim(); const m = v.match(/^#([0-9a-f]{6})$/i); return m ? [parseInt(m[1].slice(0, 2), 16), parseInt(m[1].slice(2, 4), 16), parseInt(m[1].slice(4), 16)] : [128, 128, 128]; };
+  for (const n of ['ground', 'panel', 'ink', 'ink-2', 'ink-3', 'road-fwy', 'road-major', 'road-minor', 'park', 'water', 'label', 'label-halo', 'red', 'amber', 'green', 'blue', 'unpainted', 'other', 'orange', 'line', 'cam', 'speed']) T[n] = hex(n);
+  T.dark = (T.ground[0] + T.ground[1] + T.ground[2]) < 200;
+}
+const A = (c, a) => [c[0], c[1], c[2], Math.round(a * 255)];
+const CAT = [
+  { k: 'Street cleaning', c: () => T.red },
+  { k: 'Permit / overnight', c: () => T.blue },
+  { k: 'Meter & time limit', c: () => T.green },
+  { k: 'Red zone & no stopping', c: () => T.orange },
+  { k: 'Everything else', c: () => T.other },
+];
+
+// ---------- per-mode levels & colors
+function ticketVal(b) {
+  const src = S.tAll ? b.all : b.win;
+  const n = S.tcat < 0 ? src[0] + src[1] + src[2] + src[3] + src[4] : src[S.tcat];
+  return n / b.len * 100;
+}
+let tBreaks = [1, 3, 8];
+function classify() {
+  const a = S.t0;
+  if (S.mode === 'tickets') {
+    const vals = blocks.map(ticketVal).filter(v => v > 0).sort((x, y) => x - y);
+    const qn = p => vals.length ? vals[Math.min(vals.length - 1, Math.floor(p * vals.length))] : 1;
+    tBreaks = [qn(.5), qn(.8), qn(.95)];
+  }
+  for (const b of blocks) {
+    if (S.mode === 'window') {
+      const busy = b.win[0] + b.win[1] + b.win[2] + b.win[3], pm = isPermit(b) && !b.ev.zone;
+      b.lvl = b.sweepHit || b.evHit ? 5 : (pm && permHit(b)) ? 4 : ((pm && b.perm) || (busy >= 3 && busy / b.len * 100 >= 2)) ? 3 : b.metOn ? 2 : 1;
+    } else if (S.mode === 'tickets') {
+      const v = ticketVal(b); b.lvl = v <= 0 ? 0 : v < tBreaks[0] ? 1 : v < tBreaks[1] ? 2 : v < tBreaks[2] ? 3 : 4;
+    } else if (S.mode === 'sweep') {
+      b.lvl = !b.routes.length ? 0 : b.sweepHit ? 5 : !b.next ? 1 : b.next[0] - a < DAY ? 4 : b.next[0] - a < 3 * DAY ? 3 : 2;
+    } else {
+      b.lvl = b.ev.zone ? (b.evHit ? 3 : 2) : !isPermit(b) ? 0 : permHit(b) ? 3 : 2;
+    }
+  }
+  wehoSweep.forEach((w, i) => {
+    const nx = nextOcc(w, a);
+    w.next = nx;
+    w.lvl = S.mode === 'window' ? (wsHit[i] ? 5 : 1) : S.mode === 'sweep' ? (wsHit[i] ? 5 : !nx ? 1 : nx[0] - a < DAY ? 4 : nx[0] - a < 3 * DAY ? 3 : 2) : 0;
+  });
+  wehoPermit.forEach((w, i) => {
+    const h = wpHit[i];
+    w.lvl = S.mode === 'window' ? (h.permit ? 4 : h.limit && (S.t1 - S.t0) > 2 * 36e5 ? 3 : 1) : S.mode === 'permit' ? (h.permit ? 3 : 1) : 0;
+  });
+  overlayData = null;  // levels changed: layers() rebuilds the street overlay once, not on every zoom step
+}
+function colorFor(it) {
+  const L = it.lvl;
+  if (S.mode === 'window') {
+    if (L === 1 && it.rec === 0) return A(T['ink-3'], T.dark ? .22 : .3);
+    return [null, A(T.unpainted, T.dark ? .38 : .55), A(T.green, .9), A(T.amber, .95), A(T.blue, .95), A(T.red, 1)][L] || [0, 0, 0, 0];
+  }
+  if (S.mode === 'tickets') {
+    const r = T.red, lo = T.dark ? [90, 60, 62] : [236, 180, 170];
+    const mix = t => [0, 1, 2].map(j => Math.round(lo[j] + (r[j] - lo[j]) * t));
+    return [[0, 0, 0, 0], A(mix(0), .75), A(mix(.35), .85), A(mix(.7), .95), A(mix(1), 1)][L];
+  }
+  if (S.mode === 'sweep') return [[0, 0, 0, 0], A(T.unpainted, T.dark ? .3 : .5), A(T.green, .75), A(T.amber, .9), A(T.orange, 1), A(T.red, 1)][L];
+  return [[0, 0, 0, 0], A(T.blue, .35), A(T.blue, .65), A(T.blue, 1)][L];
+}
+
+// ---------- deck
+let deckgl, fontReady = false;
+const hoods = [['Echo Park', -118.2605, 34.0785], ['Silver Lake', -118.2705, 34.0905], ['Los Feliz', -118.2925, 34.1085], ['East Hollywood', -118.2985, 34.0915],
+  ['Hollywood', -118.3285, 34.1005], ['West Hollywood', -118.3705, 34.0905], ['Fairfax', -118.3615, 34.0785], ['Hancock Park', -118.3295, 34.0675],
+  ['Koreatown', -118.3015, 34.0605], ['Westlake', -118.2745, 34.0575], ['Angelino Heights', -118.2505, 34.0705], ['Larchmont', -118.3235, 34.0775],
+  ['Mid-Wilshire', -118.3455, 34.0605], ['Beverly Grove', -118.3775, 34.0745], ['Virgil Village', -118.2875, 34.0805], ['Elysian Park', -118.2415, 34.0835],
+  ['Downtown', -118.2516, 34.0502], ['Chinatown', -118.2378, 34.0626],
+  // downtown packs its districts close together, so the small ones wait until you're in
+  ['Little Tokyo', -118.2399, 34.0488, 13.6], ['Arts District', -118.2355, 34.0472, 13.6]];
+
+const RW = [22, 15, 12, 10, 7];
+const roadsMinor = roads.filter(r => r.c > 2), roadsMajor = roads.filter(r => r.c <= 2).sort((a, b) => b.c - a.c);
+// layers() runs on every 0.2 of zoom. A new data array makes deck recompute that layer's buffers,
+// which is what made zooming stutter, so data arrays are kept until their inputs actually change.
+var overlayData = null;
+const memoData = {};
+const memo = (k, key, fn) => memoData[k] && memoData[k].key === key ? memoData[k].v : (memoData[k] = { key, v: fn() }).v;
+function layers() {
+  const z = viewZoom, D = deck;
+  const roadCol = c => c === 0 ? T['road-fwy'] : c <= 2 ? T['road-major'] : T['road-minor'];
+  const overlay = overlayData || (overlayData = [...blocks, ...wehoSweep, ...wehoPermit].filter(b => b.lvl > 0).sort((a, b) => a.lvl - b.lvl));
+  const selPath = S.sel && S.sel.hl ? S.sel.hl : [];
+  const L = [
+    new D.SolidPolygonLayer({ id: 'green', data: green, getPolygon: d => d.poly, getFillColor: d => d.k ? T.water : T.park, updateTriggers: { getFillColor: T.ground } }),
+    new D.PolygonLayer({ id: 'districts', data: [...ppd.map(p => ({ ...p, w: 0 })), ...wehoDistricts.map(p => ({ ...p, w: 1 }))], visible: S.showDistricts || S.mode === 'permit',
+      getPolygon: d => d.poly, filled: true, stroked: true, getFillColor: A(T.blue, S.mode === 'permit' ? .06 : .05), getLineColor: A(T.blue, .55), lineWidthMinPixels: 1, getLineWidth: 2,
+      updateTriggers: { getFillColor: [T.blue, S.mode], getLineColor: T.blue } }),
+    new D.PathLayer({ id: 'roads-minor', data: roadsMinor, getPath: d => d.path, getColor: d => roadCol(d.c), getWidth: d => RW[d.c], widthUnits: 'meters', widthMinPixels: .7,
+      capRounded: true, jointRounded: true, updateTriggers: { getColor: T.ground } }),
+    new D.PathLayer({ id: 'roads-major', data: roadsMajor, getPath: d => d.path, getColor: d => roadCol(d.c), getWidth: d => RW[d.c], widthUnits: 'meters', widthMinPixels: 1.6,
+      capRounded: true, jointRounded: true, updateTriggers: { getColor: T.ground } }),
+    new D.SolidPolygonLayer({ id: 'bh-mask', data: bhOutline, getPolygon: d => d, getFillColor: A(T.ground, T.dark ? .72 : .78), updateTriggers: { getFillColor: T.ground } }),
+    new D.PathLayer({ id: 'bh-line', data: bhOutline, getPath: d => d, getColor: A(T['ink-3'], .5), getWidth: 1.2, widthUnits: 'pixels', updateTriggers: { getColor: T.ground } }),
+    new D.PathLayer({ id: 'weho-line', data: wehoOutline, getPath: d => d, getColor: A(T['ink-3'], .7), getWidth: 1.4, widthUnits: 'pixels', getDashArray: [4, 3],
+      updateTriggers: { getColor: T.ground } }),
+    new D.PathLayer({ id: 'overlay', data: overlay, getPath: d => d.path, getColor: colorFor, getWidth: 7, widthUnits: 'meters', widthMinPixels: z < 13 ? 1.2 : 1.8, widthMaxPixels: 9,
+      capRounded: true, jointRounded: true, pickable: true, autoHighlight: true, highlightColor: A(T.ink, .35),
+      updateTriggers: { getColor: [S.mode, S.t0, S.t1, S.tcat, S.tAll, T.ground] } }),
+    // a ground-colored casing so the dashes hold up on orange (sweeping) and red streets
+    new D.PathLayer({ id: 'speed-case', data: speedLines, visible: S.showSpeed, getPath: d => d.path, getColor: A(T.ground, .95), getWidth: z >= 15 ? 8 : 6, widthUnits: 'pixels',
+      capRounded: true, updateTriggers: { getColor: T.ground, getWidth: z >= 15 } }),
+    new D.PathLayer({ id: 'speed', data: speedLines, visible: S.showSpeed, getPath: d => d.path, getColor: A(T.speed, 1), getWidth: z >= 15 ? 5 : 3.5, widthUnits: 'pixels',
+      getDashArray: [2.5, 1.5], extensions: [new D.PathStyleExtension({ dash: true })], pickable: true, updateTriggers: { getColor: T.ground, getWidth: z >= 15 } }),
+    new D.PathLayer({ id: 'sel-line', data: selPath, getPath: d => d, getColor: A(T.ink, .9), getWidth: 12, widthUnits: 'meters', widthMinPixels: 5, widthMaxPixels: 14, capRounded: true, jointRounded: true,
+      updateTriggers: { getColor: T.ground } }),
+    new D.ScatterplotLayer({ id: 'meters', data: meters, visible: S.showMeters && z >= 14.5, getPosition: d => d.pos, radiusUnits: 'meters', getRadius: 2.6, radiusMinPixels: z >= 16 ? 3 : 2,
+      getFillColor: d => d.st === 2 && d.age < 240 ? T.green : d.st === 1 && d.age < 240 ? A(T.ink, .45) : A(T.green, .55), stroked: true, getLineColor: A(T.ground, 1), lineWidthMinPixels: .8,
+      pickable: true, updateTriggers: { getFillColor: [T.ground, occTime] } }),
+    new D.SolidPolygonLayer({ id: 'alpr-cones', data: cones, visible: S.showAlpr && z >= 14.5, getPolygon: d => d.poly, getFillColor: d => A(d.a.flock ? T.cam : T['ink-3'], .22), updateTriggers: { getFillColor: T.ground } }),
+    new D.ScatterplotLayer({ id: 'alpr', data: alpr, visible: S.showAlpr, getPosition: d => d.pos, radiusUnits: 'pixels', getRadius: d => (d.flock ? 4.5 : 3.5) * (z >= 15 ? 1.2 : 1),
+      getFillColor: d => d.flock ? T.cam : A(T['ink-3'], .9), stroked: true, getLineColor: A(T.panel, 1), lineWidthUnits: 'pixels', getLineWidth: 1.5, pickable: true,
+      updateTriggers: { getFillColor: T.ground, getLineColor: T.ground, getRadius: z >= 15 } }),
+    new D.ScatterplotLayer({ id: 'pin-halo', data: S.sel ? [S.sel.pt] : [], getPosition: d => d, radiusUnits: 'pixels', getRadius: 22, getFillColor: A(T.ink, .14),
+      updateTriggers: { getFillColor: T.ground } }),
+    new D.ScatterplotLayer({ id: 'pin-ring', data: S.sel ? [S.sel.pt] : [], getPosition: d => d, radiusUnits: 'pixels', getRadius: 13, getFillColor: A(T.ground, .95),
+      stroked: true, getLineColor: T.ink, lineWidthUnits: 'pixels', getLineWidth: 3, updateTriggers: { getFillColor: T.ground, getLineColor: T.ground } }),
+    new D.ScatterplotLayer({ id: 'pin', data: S.sel ? [S.sel.pt] : [], getPosition: d => d, radiusUnits: 'pixels', getRadius: 5.5, getFillColor: T.ink,
+      updateTriggers: { getFillColor: T.ground } }),
+  ];
+  if (fontReady) {
+    const lbls = memo('labels', z >= 15 ? 3 : z >= 13.4 ? 2 : z >= 12.5 ? 1 : 0, () => labels.filter(l => z >= 15 || (z >= 13.4 && l.c <= 2) || (l.c <= 1 && z >= 12.5)));
+    L.push(new D.TextLayer({ id: 'labels', data: lbls, getPosition: d => d.pos, getText: d => d.t, getAngle: d => d.a, getSize: d => d.c <= 2 ? 12.5 : 11.5, sizeUnits: 'pixels',
+      fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', fontWeight: 600, characterSet: 'auto', getColor: T.label, fontSettings: { sdf: true, fontSize: 48, buffer: 6 }, outlineWidth: 4, outlineColor: A(T['label-halo'], .95),
+      extensions: [new D.CollisionFilterExtension()], collisionEnabled: true, getCollisionPriority: d => (4 - d.c) * 1000 + Math.min(d.len, 999), collisionTestProps: { sizeScale: 2.2 },
+      updateTriggers: { getColor: T.ground } }));
+    L.push(new D.TextLayer({ id: 'hoods', data: memo('hoods', z >= 13.6, () => hoods.filter(h => z >= (h[3] || 0))), visible: z < 15.2, getPosition: d => [d[1], d[2]], getText: d => d[0], getSize: 15, fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', fontWeight: 700,
+      characterSet: 'auto', getColor: A(T.ink, T.dark ? .55 : .5), fontSettings: { sdf: true, fontSize: 64, buffer: 8 }, outlineWidth: 5, outlineColor: A(T.ground, .9), getLetterSpacing: 0,
+      updateTriggers: { getColor: T.ground } }));
+    const lotData = memo('lots', `${S.showLots}${z >= 12.8}${z >= 15}`, () => lots.filter(l => S.showLots && (l.k === 'city' ? z >= 12.8 : z >= 15)));
+    L.push(new D.TextLayer({ id: 'lots', data: lotData, getPosition: d => d.pos, getText: () => 'P', getSize: d => d.k === 'city' ? 13 : 11, fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', fontWeight: 700,
+      characterSet: ['P'], getColor: [255, 255, 255], background: true, getBackgroundColor: d => d.k === 'city' ? [27, 79, 184] : d.acc === 'customers' ? [122, 130, 138] : [63, 74, 90],
+      backgroundPadding: [4, 1, 4, 1], backgroundBorderRadius: 3, pickable: true }));
+  }
+  return L;
+}
+const redraw = () => deckgl && deckgl.setProps({ layers: layers() });
+
+function tooltip({ object, layer }) {
+  if (!object || !layer) return null;
+  const st = { background: getComputedStyle(document.documentElement).getPropertyValue('--panel'), color: getComputedStyle(document.documentElement).getPropertyValue('--ink'), border: '1px solid ' + getComputedStyle(document.documentElement).getPropertyValue('--line'), borderRadius: '6px', padding: '6px 9px', maxWidth: '260px' };
+  if (layer.id === 'meters') return { html: `<b>${esc(object.lim.replace('HR', ' hr').replace('MIN', ' min'))} · ${esc(object.rate)}</b><br>${esc(object.face)}<br><span style="opacity:.7">Space ${esc(object.id)}${object.st ? ' · ' + (['', 'Occupied', 'Open', 'Unknown'][object.st]) + (object.age ? ` ${ago(object.age)}` : '') : ''}</span>`, style: st };
+  if (layer.id === 'alpr') return { html: `<b>Plate reader</b>${object.mfr ? ' · ' + esc(object.mfr) : ''}<br><span style="opacity:.7">${object.dirs.length ? 'Faces ' + object.dirs.map(compass).join(' & ') : 'Direction not mapped'}${object.op ? ' · ' + esc(object.op) : ''}</span>`, style: st };
+  if (layer.id === 'speed') return { html: `<b>Speed cameras</b> · ${esc(object.c.st)}<br>${esc(object.c.from)} to ${esc(object.c.to)}<br><span style="opacity:.7">${esc(speedStatus(object.c, S.t0))}</span>`, style: st };
+  if (layer.id === 'lots') return { html: `<b>${esc(object.n || (object.k === 'garage' ? 'Parking garage' : 'Parking lot'))}</b><br><span style="opacity:.7">${esc(lotLine(object))}</span>`, style: st };
+  if (layer.id === 'overlay') {
+    if (object.kind === 'la') return { html: `<b>${esc(blockTitle(object))}</b><br><span style="opacity:.75">${esc(lvlText(object))}</span>`, style: st };
+    if (object.kind === 'wp') return { html: `<b>${esc(title(object.name))}</b><br><span style="opacity:.75">District ${esc(object.dist)} · ${esc(object.hrs)}</span>`, style: st };
+    if (object.kind === 'ws') return { html: `<b>West Hollywood sweeping</b><br><span style="opacity:.75">${esc(object.day)} ${fmtMin(object.t0)}–${fmtMin(object.t1)}</span>`, style: st };
+  }
+  return null;
+}
+function ago(min) { const m = Math.max(0, Math.round(min + (Date.now() - occFetched) / MIN)); return m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' hr ago' : Math.round(m / 1440) + ' days ago'; }
+let occFetched = Date.now();
+function lvlText(b) {
+  if (S.mode === 'tickets') { const n = S.tAll ? b.all : b.win; return `${n.reduce((a, c) => a + c, 0)} tickets ${S.tAll ? 'in 6 months' : 'at these hours in 6 months'}`; }
+  if (S.mode === 'sweep') return b.next ? `Next sweep ${fmtD(b.next[0])} ${fmtT(b.next[0])}` : 'No posted sweeping';
+  if (S.mode === 'permit') return b.ev.zone ? 'District D (Dodger events)' : !isPermit(b) ? '' : `${b.perm.n + b.perm.opd} permit tickets written here in 18 mo`;
+  if (b.evHit) return 'Dodger game restriction in your window';
+  if (b.lvl === 1 && b.rec === 0) return 'No records for this block';
+  if (b.lvl === 1 && b.nmet) return 'Not metered at these hours';
+  return ['', 'Nothing in the data for your window', 'Metered', 'Check signs', 'Permit enforced at these hours', 'Street cleaning in your window'][b.lvl];
+}
+
+// ---------- naming
+const SUF = { STREET: 'ST', AVENUE: 'AVE', AV: 'AVE', BOULEVARD: 'BLVD', BL: 'BLVD', DRIVE: 'DR', PLACE: 'PL', ROAD: 'RD', TERRACE: 'TER', COURT: 'CT', LANE: 'LN', CIRCLE: 'CIR', WAY: 'WY', PARKWAY: 'PKWY', TRAIL: 'TRL', NORTH: 'N', SOUTH: 'S', EAST: 'E', WEST: 'W', SAINT: 'ST' };
+const norm = s => s.toUpperCase().replace(/[.,#]/g, ' ').replace(/\s+/g, ' ').trim().split(' ').map((w, i, arr) => (w === 'SAINT' && i < arr.length - 1) ? 'ST' : (SUF[w] && !(w === 'SAINT')) ? SUF[w] : w).join(' ');
+function title(s) {
+  return s.toLowerCase().replace(/\b([a-z])/g, c => c.toUpperCase()).replace(/\b(\d+)(St|Nd|Rd|Th)\b/g, (m, n, s) => n + s.toLowerCase()).replace(/\bWy\b/, 'Way').replace(/\bMc([a-z])/g, (m, c) => 'Mc' + c.toUpperCase());
+}
+function blockTitle(b) { return b.lo ? `${title(b.name)} · ${Math.floor(b.lo / 100) * 100} block` : title(b.name); }
+
+// ---------- geocode
+function geocode(input) {
+  const m = input.trim().match(/^(\d+)(?:[a-z]\b|\s+1\/2)?\s+(.+)$/i);
+  const num = m ? +m[1] : null, rest = norm(m ? m[2] : input).replace(/ (LOS ANGELES|LA|CA|WEST HOLLYWOOD|WEHO)\b.*$/, '').replace(/ \d{5}$/, '');
+  if (!rest) return null;
+  const restBase = rest.replace(/^(N|S|E|W) /, '');
+  const tiers = new Map();
+  for (const s of streets) {
+    const sc = s.key === rest ? 5 : s.base === restBase && s.key.startsWith(rest.split(' ')[0]) ? 4.5 : s.base === rest ? 4 : s.base === restBase ? 3.5 : s.base.split(' ').slice(0, -1).join(' ') === restBase ? 3 : s.base.startsWith(restBase + ' ') ? 2 : 0;
+    if (sc) (tiers.get(sc) || tiers.set(sc, []).get(sc)).push(s);
+  }
+  if (!tiers.size) return null;
+  const order = [...tiers.keys()].sort((a, b) => b - a);
+  if (num == null) { const s = tiers.get(order[0]).sort((a, b) => b.nums.length - a.nums.length)[0], i = Math.floor(s.nums.length / 2); return { pt: [s.xs[i], s.ys[i]], label: title(s.key), street: s }; }
+  let hit = null, hd = Infinity;
+  for (const t of order) {
+    for (const s of tiers.get(t)) {
+      for (let i = 0; i < s.nums.length; i++) {
+        const d = Math.abs(s.nums[i] - num) + ((s.nums[i] - num) % 2 ? 0.5 : 0);
+        if (d < hd) { hd = d; hit = { s, i }; }
+      }
+    }
+    if (hit && hd <= 400) break;
+  }
+  if (!hit || hd > 400) return null;
+  const { s, i } = hit;
+  return { pt: [s.xs[i], s.ys[i]], label: (hd === 0 ? num : s.nums[i]) + ' ' + title(s.key), exact: hd === 0, street: s, num: s.nums[i] };
+}
+function suggestions(input) {
+  const m = input.trim().match(/^(\d+)?\s*(.*)$/); const num = m[1], rest = norm(m[2] || '');
+  if (rest.length < 2) return [];
+  const rb = rest.replace(/^(N|S|E|W) /, '');
+  const st = streets.filter(s => s.base.startsWith(rb) || s.key.startsWith(rest)).sort((a, b) => b.nums.length - a.nums.length).slice(0, num ? 6 : 4)
+    .map(s => ({ text: (num ? num + ' ' : '') + title(s.key), sub: s.nums[0] + '–' + s.nums[s.nums.length - 1] }));
+  if (num) return st;
+  const pl = findPlaces(input).map(p => ({ text: p.n, sub: [p.cat, p.addr].filter(Boolean).join(' · '), place: p }));
+  // an exact name, a neighborhood or a notable place goes above the streets; "melrose" still means Melrose Ave first
+  const lead = pl.filter(x => x.place.hood || x.place.big || x.place.keys.includes(pnorm(input)) || !st.length);
+  return [...lead, ...st, ...pl.filter(x => !lead.includes(x))].slice(0, 7);
+}
+// ---------- places: named OSM places (shops, parks, schools...) and the neighborhood labels
+const pnorm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/['’.]/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+const places = [
+  ...hoods.map(h => ({ n: h[0], pos: [h[1], h[2]], cat: 'Neighborhood', addr: '', hood: true })),
+  ...(C.places || []).map(([n, x, y, c, addr, alias, big]) => ({ n, pos: P([x, y]), cat: C.placeCats[c], addr, alias, big })),
+].map(pl => ({ ...pl, key: pnorm(pl.n), keys: [pnorm(pl.n), ...(pl.alias ? pl.alias.split(';').map(pnorm) : [])] }));
+const placeQ = pl => pl.n + (pl.addr ? ', ' + pl.addr : '');
+const viewDist = pl => typeof vs === 'undefined' ? 0 : Math.hypot(pl.pos[0] - vs.longitude, pl.pos[1] - vs.latitude);
+function findPlaces(input, limit = 5) {
+  const k = pnorm(input); if (k.length < 2) return [];
+  const words = k.split(' '), out = [];
+  for (const pl of places) {
+    const sc = Math.max(...pl.keys.map(key => key === k ? 4 : key.startsWith(k) ? 3 : key.includes(' ' + k) ? 2 : words.length > 1 && words.every(w => key.includes(w)) ? 1 : 0));
+    // neighborhoods and notable places (ones with a Wikipedia entry) beat the gift shop and the ticket office
+    if (sc) out.push([pl, sc + (pl.hood ? .6 : pl.big ? .5 : 0)]);
+  }
+  // chains (Starbucks, Trader Joe's) list the branches closest to where the map is looking
+  out.sort((a, b) => b[1] - a[1] || viewDist(a[0]) - viewDist(b[0]));
+  const res = [];
+  for (const [pl] of out) {
+    // the same name mapped twice nearby (two "LACMA Store" points) is one result
+    if (res.some(r => r.key === pl.key && r.addr === pl.addr && Math.hypot(r.pos[0] - pl.pos[0], r.pos[1] - pl.pos[1]) < .005)) continue;
+    res.push(pl); if (res.length >= limit) break;
+  }
+  return res;
+}
+// "Name" or "Name, 123 Some St" (how place links are written) -> that place
+function exactPlace(text) {
+  const t = text.trim(), i = t.lastIndexOf(', ');
+  for (const [name, addr] of [[t, ''], ...(i > 0 ? [[t.slice(0, i), t.slice(i + 2)]] : [])]) {
+    const m = places.filter(pl => pl.keys.includes(pnorm(name)) && (!addr || pnorm(pl.addr) === pnorm(addr)));
+    if (m.length) return m.sort((a, b) => (b.key === pnorm(name)) - (a.key === pnorm(name)) || (b.hood ? 2 : b.big ? 1 : 0) - (a.hood ? 2 : a.big ? 1 : 0) || viewDist(a) - viewDist(b))[0];
+  }
+  return null;
+}
+// a place lands on the curb the way its address would: its own address, or the nearest address point
+function placeSpot(pl) {
+  const g = pl.addr && geocode(pl.addr);
+  if (g && g.num != null && Math.hypot(...[0, 1].map(j => toM(...g.pt)[j] - toM(...pl.pos)[j])) < 250 && near(gBlocks, blocks, ...g.pt).some(bl => pathDist(toM(...g.pt), bl.path) < 40)) return g;
+  const pm = toM(...pl.pos); let best = null, bd = Infinity;
+  for (const [si, i] of near(gAddr, addrPts, pl.pos[0], pl.pos[1], 2)) { const st = streets[si], d = Math.hypot(...[0, 1].map(j => toM(st.xs[i], st.ys[i])[j] - pm[j])); if (d < bd) { bd = d; best = { pt: [st.xs[i], st.ys[i]], street: st, num: st.nums[i] }; } }
+  if (best && bd < 120) return best;
+  // a stadium or a park can sit a long way from any address or curb: put the pin on the nearest block instead
+  const pt = best ? best.pt : pl.pos, qm = toM(...pt);
+  let nb = null, nd = Infinity;
+  for (const bl of near(gBlocks, blocks, pt[0], pt[1], 3)) { const d = pathDist(qm, bl.path); if (d < nd) { nd = d; nb = bl; } }
+  if (!nb || nd < 40) return best || { pt, num: null };
+  let cp = pt, cd = Infinity;
+  for (let i = 1; i < nb.path.length; i++) {
+    const a = toM(...nb.path[i - 1]), b = toM(...nb.path[i]), dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy;
+    const t = L ? Math.max(0, Math.min(1, ((qm[0] - a[0]) * dx + (qm[1] - a[1]) * dy) / L)) : 0, x = a[0] + t * dx, y = a[1] + t * dy, d = Math.hypot(qm[0] - x, qm[1] - y);
+    if (d < cd) { cd = d; cp = [x / KX - 118.3, y / KY + 34.08]; }
+  }
+  return { pt: cp, num: null };
+}
+function nearestAddr(lon, lat) {
+  const pm = toM(lon, lat); let best = null, bd = 45;
+  for (const [si, i] of near(gAddr, addrPts, lon, lat)) { const s = streets[si]; const d = Math.hypot(...[0, 1].map(j => toM(s.xs[i], s.ys[i])[j] - pm[j])); if (d < bd) { bd = d; best = s.nums[i] + ' ' + title(s.key); } }
+  return best;
+}
+
+// ---------- location query + detail panel
+function query(lon, lat, label, hint) {
+  const pm = toM(lon, lat);
+  const cand = near(gBlocks, blocks, lon, lat, 2).map(b => [b, pathDist(pm, b.path)]);
+  let nb = cand.filter(x => x[1] < 40).sort((a, b) => a[1] - b[1]);
+  if (hint) {
+    const same = cand.filter(([b, d]) => d < 130 && b.name.replace(/^(N|S|E|W) /, '') === hint.base).sort((a, b) => a[1] - b[1]);
+    const inRange = same.filter(([b]) => b.lo <= hint.num && hint.num <= b.hi && (b.lo % 2 === hint.num % 2 || b.hi - b.lo > 3));
+    const pick = inRange[0] || same[0];
+    if (pick) nb = [[pick[0], 0], ...nb];
+  }
+  const block = nb.length ? nb[0][0] : null;
+  let wp = near(gWP, wehoPermit, lon, lat, 2).map(w => [w, pathDist(pm, w.path)]);
+  if (hint) { const m = wp.filter(([w, d]) => d < 110 && norm(w.name).includes(hint.base)); const nums = w => (w.name.match(/^(\d+)-(\d+)/) || []).slice(1).map(Number); const r = m.filter(([w]) => { const [lo, hi] = nums(w); return lo <= hint.num && hint.num <= hi && lo % 2 === hint.num % 2; }); wp = (r.length ? r : m); }
+  else wp = wp.filter(x => x[1] < 30);
+  wp = wp.sort((a, b) => a[1] - b[1]).map(x => x[0]);
+  const ws = near(gWS, wehoSweep, lon, lat).map(w => [w, pathDist(pm, w.path)]).filter(x => x[1] < 30).sort((a, b) => a[1] - b[1]).map(x => x[0]);
+  const inWeho = wehoOutline.some(r => inPoly([lon, lat], r));
+  const inBH = !inWeho && bhOutline.some(r => inPoly([lon, lat], r));
+  const mets = near(gMet, meters, lon, lat).map(m => [m, Math.hypot(toM(...m.pos)[0] - pm[0], toM(...m.pos)[1] - pm[1])]).filter(x => x[1] < 70).sort((a, b) => a[1] - b[1]).map(x => x[0]);
+  const lotsNear = lots.map(l => [l, Math.hypot(toM(...l.pos)[0] - pm[0], toM(...l.pos)[1] - pm[1])]).filter(x => x[1] < 650).sort((a, b) => (a[1] - (a[0].k === 'city' ? 150 : 0)) - (b[1] - (b[0].k === 'city' ? 150 : 0))).slice(0, 5);
+  const cams = alpr.map(c => [c, Math.hypot(toM(...c.pos)[0] - pm[0], toM(...c.pos)[1] - pm[1])]).filter(x => x[1] < 400).sort((a, b) => a[1] - b[1]).slice(0, 6);
+  const spd = speed.map(c => [c, Math.min(...c.paths.map(p => pathDist(pm, p)))]).filter(x => x[1] < 400).sort((a, b) => a[1] - b[1]);
+  let ppdIds = block ? block.ppd : [];
+  if (!block && !inWeho) ppdIds = ppd.filter(p => inPoly([lon, lat], p.poly)).map(p => p.id);
+  const wDist = wehoDistricts.filter(d => inPoly([lon, lat], d.poly)).map(d => d.id);
+  const lbl = label || nearestAddr(lon, lat) || (block ? blockTitle(block) : 'Dropped pin');
+  const useBlock = block && !inWeho;
+  const hl = [];
+  if (useBlock) hl.push(block.path);
+  wp.slice(0, 1).forEach(w => hl.push(w.path));
+  S.sel = { pt: [lon, lat], hl, inBH, block: inBH ? null : (useBlock ? block : null), wp: wp.slice(0, 2), ws: ws.slice(0, 2), inWeho, mets, lots: lotsNear, cams, spd, ppd: [...new Set(ppdIds)], wDist, label: lbl };
+  S.sheetOpen = false;
+  if (isMobile() && S.touched) { $('#rail').classList.add('collapsed'); $('#railToggle').setAttribute('aria-expanded', 'false'); }
+  renderDetail(); redraw();
+}
+
+function signSweep(rs, weekly) {
+  const groups = new Map();
+  for (const r of rs) { const k = r.t0 + '-' + r.t1 + '-' + (r.wk || 0); (groups.get(k) || groups.set(k, []).get(k)).push(r); }
+  return [...groups.values()].map(g => {
+    const days = [...new Set(g.flatMap(r => DOW.filter((d, i) => r.mask & (1 << i))))].sort((x, y) => DOW.indexOf(x) - DOW.indexOf(y));
+    const dayTxt = days.length === 5 && !days.includes('Sunday') && !days.includes('Saturday') ? 'Mon thru Fri' : days.length === 7 ? 'Daily' : days.length === 2 && g.length === 2 ? days.join(' / ') : days.join(' · ');
+    const wk = g[0].wk; const wkTxt = wk ? [1, 2, 3, 4].filter(n => wk & (1 << (n - 1))).map(ord).join(' & ') + ' of the month' : weekly ? 'Every week' : 'Every week';
+    const sides = g.length === 2 && days.length === 2 ? `<div class="sm">${esc(days[0].slice(0, 3))} one side · ${esc(days[1].slice(0, 3))} the other</div>` : '';
+    const a = S.t0, b = Math.max(S.t1, S.t0 + 15 * MIN);
+    const hits = g.map(r => overlaps(r, a, b)).filter(Boolean);
+    const nexts = g.map(r => nextOcc(r, a)).filter(Boolean).sort((x, y) => x[0] - y[0]);
+    const meta = [hits.length ? `<span class="hit">Hits your window: ${fmtD(hits[0][0])} ${fmtT(hits[0][0])}</span>` : `<span class="ok">Clear of your window</span>`,
+      nexts.length ? `<span>Next: ${nexts.slice(0, 2).map(n => fmtD(n[0])).join(', ')}</span>` : '', g[0].code ? `<span>Route ${esc(g.map(r => r.code).join(' / '))}</span>` : ''].filter(Boolean);
+    return { hit: hits.length > 0, html: `<div><div class="sign"><div class="in"><div class="big">No parking</div><div class="mid">${fmtMin(g[0].t0)} to ${fmtMin(g[0].t1)}</div><div class="mid">${esc(dayTxt)}</div>${sides}<div class="sm">${esc(wkTxt)}</div><div class="tag"><span>Street cleaning</span></div></div></div><div class="smeta">${meta.join('')}</div></div>` };
+  });
+}
+function hourSpan(block, cat) {
+  const h = new Array(24).fill(0);
+  for (let i = 0; i < block.cit.length; i += 2) { const k = block.cit[i]; if (Math.floor(k / 168) === cat) h[(k % 168) % 24] += block.cit[i + 1]; }
+  const tot = h.reduce((a, b) => a + b, 0); if (tot < 3) return null;
+  let bestS = 0, bestL = 24;
+  for (let s = 0; s < 24; s++) { let acc = 0; for (let l = 1; l <= 24; l++) { acc += h[(s + l - 1) % 24]; if (acc >= tot * .85) { if (l < bestL) { bestL = l; bestS = s; } break; } } }
+  return [bestS, (bestS + bestL) % 24, tot];
+}
+function chartSVG(block) {
+  const H = Array.from({ length: 24 }, () => [0, 0, 0, 0, 0]);
+  for (let i = 0; i < block.cit.length; i += 2) { const k = block.cit[i]; H[(k % 168) % 24][Math.floor(k / 168)] += block.cit[i + 1]; }
+  const tot = H.map(r => r.reduce((a, b) => a + b, 0)), mx = Math.max(1, ...tot);
+  const W = 300, h = 70, bw = W / 24;
+  const win = new Array(24).fill(0); for (let s = 0; s < 168; s++) if (slotMask[s]) win[s % 24] = 1;
+  let g = '';
+  for (let i = 0; i < 24; i++) if (win[i]) g += `<rect x="${i * bw}" y="0" width="${bw}" height="${h}" fill="var(--ink)" opacity=".07"/>`;
+  g += `<line x1="0" x2="${W}" y1="${h}" y2="${h}" stroke="var(--line)"/>`;
+  for (let i = 0; i < 24; i++) {
+    let y = h;
+    H[i].forEach((n, c) => { if (!n) return; const bh = n / mx * (h - 4); y -= bh; g += `<rect x="${i * bw + 1.2}" y="${y}" width="${bw - 2.4}" height="${bh}" fill="var(--${['red', 'blue', 'green', 'orange', 'other'][c]})"/>`; });
+  }
+  [[0, '12a'], [6, '6a'], [12, '12p'], [18, '6p']].forEach(([i, t]) => g += `<text x="${i * bw + 1}" y="${h + 13}" font-size="10" fill="var(--ink-3)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">${t}</text>`);
+  g += `<text x="${W}" y="9" font-size="10" text-anchor="end" fill="var(--ink-3)" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">${mx} max / hr</text>`;
+  return `<svg viewBox="0 -2 ${W} ${h + 18}" role="img" aria-label="Tickets by hour of day">${g}</svg>`;
+}
+function lotLine(l) {
+  if (l.src === 'LADOT') return [l.a, l.r && l.r !== 'See Special Features' ? l.r : '', l.d ? l.d + ' max' : '', l.h].filter(Boolean).join(' · ');
+  if (l.src === 'WeHo') return [l.a, l.s ? l.s + ' spaces' : '', 'City of West Hollywood'].filter(Boolean).join(' · ');
+  return [l.k === 'garage' ? 'Garage' : 'Lot', l.acc === 'customers' ? 'customers only' : l.acc === 'yes' ? 'public' : '', l.fee === 'yes' ? 'paid' : l.fee === 'no' ? 'free' : '', l.s ? l.s + ' spaces' : '', l.h].filter(Boolean).join(' · ');
+}
+const isMobile = () => innerWidth <= 760;
+// close enough to read the block, wide enough to place it: ~1 km across at addr, a neighborhood at street
+const Z = { addr: () => isMobile() ? 15.6 : 16.2, street: () => isMobile() ? 14.2 : 14.8, spot: () => isMobile() ? 16.4 : 16.8 };
+// the report link pre-fills the block and what the map said, so a reply only needs what the sign says
+const reportLink = (where, said) => `<span class="report">Incorrect? <a href="mailto:hello@curbwatch.la?subject=${encodeURIComponent('CurbWatch LA correction: ' + where)}&body=${encodeURIComponent('Block: ' + where + '\nThe map says: ' + said + '\nThe sign says: ')}">Report it</a></span>`;
+const DBTNS = `<div class="dbtns"><button class="x sheet" id="sheet" type="button" aria-label="Show more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button><button class="x" id="close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`;
+function applySheet() {
+  const el = $('#detail'), peek = isMobile() && !S.sheetOpen;
+  el.classList.toggle('peek', peek);
+  document.body.classList.toggle('has-sel', !!(S.sel && S.touched));  // the opening example keeps the tagline; the rail shrinks once you've searched or tapped
+  const flip = () => { S.sheetOpen = !S.sheetOpen; applySheet(); };
+  const b = $('#sheet'); if (b) { b.onclick = flip; b.setAttribute('aria-label', peek ? 'Show more' : 'Show less'); }
+  const h = el.querySelector('.dhead'); if (h) h.onclick = e => { if (isMobile() && !e.target.closest('button')) flip(); };
+  const x = $('#close'); if (x) x.onclick = clearSel;
+}
+addEventListener('resize', () => { if (S.sel) applySheet(); });
+function renderDetail() {
+  const s = S.sel, el = $('#detail'); if (!s) { el.hidden = true; return; }
+  if (s.inBH) {
+    const cams = S.showAlpr ? s.cams : [];
+    el.innerHTML = `
+      <div class="sec">
+        <div class="dhead"><div><h2>Beverly Hills</h2><p>Outside this map’s coverage</p></div>${DBTNS}</div>
+        <div class="verdict" style="border-color:rgb(${T['ink-3'].join(',')});background:rgba(${T['ink-3'].join(',')},.10)"><b>No data for this block</b><span>CurbWatch covers the City of Los Angeles and West Hollywood. Beverly Hills runs its own parking rules and doesn’t publish them, so this map can’t tell you anything about this curb — read the posted sign.</span>${reportLink('Beverly Hills', 'No data for this block')}</div>
+      </div>
+      ${cams.length ? `<div class="sec"><div class="lbl">Plate readers within 400 m</div><div class="list">${cams.map(([c, d]) => `<button class="li" data-cam="${alpr.indexOf(c)}"><span class="cm ${c.flock ? '' : 'o'}"></span><span>${c.flock ? 'Flock Safety' : esc(c.mfr || 'Unknown maker')}<small>${c.dirs.length ? 'Faces ' + c.dirs.map(compass).join(' & ') : 'Direction not mapped'}${c.op ? ' · ' + esc(c.op) : ''}</small></span><span class="d">${Math.round(d / 10) * 10} m</span></button>`).join('')}</div>
+      <div class="fine">Cameras are mapped by volunteers in OpenStreetMap and aren’t city data, so they show up everywhere — including here.</div></div>` : ''}`;
+    el.hidden = false;
+    renderGameNote(); applySheet();
+    el.querySelectorAll('[data-cam]').forEach(n => n.onclick = () => fly(alpr[+n.dataset.cam].pos, Z.spot()));
+    return;
+  }
+  const b = s.block, a = S.t0, e = Math.max(S.t1, S.t0 + 15 * MIN);
+  const signs = []; let hitSweep = false, hitPermit = false, caution = [];
+  if (b && b.routes.length) signSweep(b.routes.map(i => routes[i])).forEach(x => { signs.push(x.html); hitSweep ||= x.hit; });
+  if (s.ws.length) signSweep(s.ws.map(w => ({ ...w, code: '' })), true).forEach(x => { signs.push(x.html); hitSweep ||= x.hit; });
+  let hitEvent = false;
+  if (b && b.ev.zone) {
+    const g = S.game, nx = nextGame(S.t0);
+    hitEvent = !!g;
+    signs.unshift(`<div><div class="sign${b.ev.zone === 2 ? ' inf' : ''}"><div class="in"><div class="big">No parking</div><div class="mid">4 hours before &amp; during</div><div class="mid">events at Dodger Stadium</div><div class="tag"><span>District D permits exempt</span></div>${b.ev.zone === 2 ? '<div class="sm">Inferred from game-day tickets, not a posted sign</div>' : ''}</div></div>
+      <div class="smeta">${g ? `<span class="hit">Dodgers vs ${esc(g.opp)} ${fmtD(g.t)} ${fmtT(g.t)} · restricted from ${fmtT(g.t - PRE)}</span>` : `<span class="ok">No home game in your window</span>${nx ? `<span>Next: ${fmtD(nx.t)} ${fmtT(nx.t)} vs ${esc(nx.opp)}</span>` : ''}`}
+      ${b.ev.g ? `<span>${b.ev.g} no-parking tickets here on game days in 6 mo${b.ev.o ? `, ${b.ev.o} on other days` : ''}</span>` : ''}<span>Concerts and other stadium events count too</span></div></div>`);
+  }
+  for (const w of s.wp.slice(0, 1)) {
+    const perm = w.rules.filter(r => r[0] === 'permit'), lim = w.rules.filter(r => r[0] === '2hr');
+    const dayT = m => m === 127 ? 'Everyday' : m === 0b1111110 ? 'Mon–Sat' : m === 0b0111110 ? 'Mon–Fri' : m === 0b1000001 ? 'Sat & Sun' : m === 1 ? 'Sunday' : '';
+    const rng = r => r[2] === 0 && r[3] === 1440 ? 'Anytime' : `${fmtMin(r[2])} to ${fmtMin(r[3])}`;
+    const h = wpHit[wehoPermit.indexOf(w)];
+    if (lim.length) signs.push(`<div><div class="sign g"><div class="in"><div class="big">${lim[0][2] === 0 && lim[0][3] === 1440 ? '2 hour parking' : '2 hour parking'}</div>${lim.map(r => `<div class="mid">${rng(r)} ${dayT(r[1])}</div>`).join('')}<div class="sm">Except district ${esc(w.dist)} permits</div></div></div></div>`);
+    if (perm.length) signs.push(`<div><div class="sign g"><div class="in"><div class="big">Permit parking only</div>${perm.map(r => `<div class="mid">${rng(r)} ${dayT(r[1])}</div>`).join('')}<div class="tag"><span>District ${esc(w.dist)}</span></div></div></div><div class="smeta">${h.permit ? `<span class="hit">Permit-only during your window</span>` : `<span class="ok">Not permit-only in your window</span>`}<span>${esc(title(w.name))}</span></div></div>`);
+    hitPermit ||= !!h.permit; if (h.limit && e - a > 2 * 36e5) caution.push('2-hour limit applies for part of your stay');
+  }
+  if (!s.wp.length && s.wDist.length && s.inWeho) signs.push(`<div><div class="sign g"><div class="in"><div class="big">Permit district ${esc(s.wDist.join(', '))}</div><div class="sm">This block isn’t in WeHo’s published permit list · read the posted sign</div></div></div></div>`);
+  if (!s.inWeho && b && isPermit(b) && !b.ev.zone) {
+    const pr = b.perm, span = permSpan(pr.hrs), pw = b.pwh;
+    const overnight = pr.opd >= 3 && pr.opd >= pr.n;
+    signs.push(`<div><div class="sign g inf"><div class="in"><div class="big">${overnight ? 'Overnight permit parking' : 'Permit parking'}</div>${span ? `<div class="mid">Ticketed ${fmtMin(span[0] * 60)} to ${fmtMin(span[1] * 60)}</div>` : ''}<div class="sm">District permits exempt · exact hours on the posted sign</div><div class="tag"><span>From ticket records, not the sign</span></div></div></div>
+      <div class="smeta"><span>${pr.n + pr.opd} permit tickets written on this block since ${fmtISOy(C.permitRange[0])}, last ${fmtISO(pr.last)}</span>${permHit(b) ? `<span class="hit">${pw} written at your hours</span>` : pw ? `<span>Only ${pw} at your hours (${Math.round(pw / (pr.n + pr.opd) * 100)}%)</span>` : '<span class="ok">None at your hours</span>'}</div></div>`);
+    if (permHit(b)) hitPermit = true; else caution.push('Permit street, enforced at other hours');
+  }
+  if (s.mets.length) {
+    const lim = [...new Set(s.mets.map(m => m.lim))], rate = [...new Set(s.mets.map(m => m.rate))];
+    const sensed = s.mets.filter(m => m.st && m.age < 240), open = sensed.filter(m => m.st === 2);
+    const span = b ? hourSpan(b, 2) : null, mw = b ? b.win[2] : 0, mh = meterHours(b), mOn = metersOn(b);
+    signs.push(`<div><div class="sign g"><div class="in"><div class="big">${esc(lim.slice(0, 2).map(l => l.replace('HR', ' HR').replace('MIN', ' MIN').replace('-', ' / ')).join(' · '))} parking</div><div class="mid">Meter · ${esc(rate.slice(0, 2).join(' · '))}${rate.some(r => r.includes('-')) ? ' by time of day' : '/hr'}</div><div class="sm">${s.mets.length} space${s.mets.length > 1 ? 's' : ''} within 70 m · ${esc(s.mets[0].face)}</div></div></div>
+      <div class="smeta">${sensed.length ? `<span class="${open.length ? 'ok' : ''}">${open.length} of ${sensed.length} sensed spaces open</span><span>${occLive ? 'live' : 'sensor snapshot'} ${fmtStamp(occTime)}</span>` : '<span>No occupancy sensors here</span>'}
+      <span class="${mOn ? '' : 'ok'}">${mOn ? `Meters run ${esc(mh.txt)}` : `Not metered at these hours · meters run ${esc(mh.txt)}`}</span>
+      ${span ? `<span>Meter tickets: ${fmtMin(span[0] * 60)}–${fmtMin(span[1] * 60)}</span>` : ''}${b && b.nmet ? (mw ? `<span>${mw} meter tickets at your hours</span>` : `<span class="ok">No meter tickets at your hours in 6 mo</span>`) : ''}</div>
+      ${sensed.length ? `<div class="mgrid" style="margin-top:6px" aria-label="Sensed spaces">${sensed.slice(0, 40).map(m => `<i class="${m.st === 2 ? 'v' : 'o'}" title="${esc(m.id)}"></i>`).join('')}</div>` : ''}</div>`);
+  }
+  if (!signs.length) signs.push(`<div><div class="sign k inf"><div class="in"><div class="mid">${b && b.rec === 0 ? 'No records for this block' : 'No posted rules in city data'}</div><div class="sm">${b && b.rec === 0 ? 'Not in any sweeping route, meter list or ticket record — read the curb' : 'No sweeping route, permit street or meter mapped here'}</div></div></div></div>`);
+  if (b) { const busy = b.win[0] + b.win[1] + b.win[2] + b.win[3]; if (busy >= 3 && busy / b.len * 100 >= 2) caution.push(`${busy} tickets written on this block at these hours in 6 months`); }
+  if (nearStadium(s.pt) && /SUNSET/.test(b ? b.name : '')) caution.push('Sunset Bl restrictions change on Dodger game days — read the temporary signs');
+  const winTxt = winLabel();
+  const winTot = b ? b.win.reduce((x, y) => x + y, 0) : 0;
+  const tot = b ? b.all.reduce((x, y) => x + y, 0) : 0;
+  const since = fmtISO(C.citeRange[0]);
+  const record = !b ? 'No ticket history for this spot.'
+    : winTot ? `${winTot} ticket${winTot === 1 ? '' : 's'} of any kind ${winTot === 1 ? 'was' : 'were'} written on this block at these hours since ${since}.`
+    : `No tickets of any kind were written on this block at these hours between ${since} and ${fmtISO(C.citeRange[1])}.`;
+  let v;
+  if (hitEvent) v = [T.red, 'Dodger game during your window', 'District D permits only, from 4 hours before first pitch until the game ends.'];
+  else if (hitSweep) v = [T.red, 'Street cleaning in your window', 'The posted route runs during your window. Move before it starts.'];
+  else if (hitPermit) v = [T.blue, s.inWeho ? 'Permit hours, by the posted schedule' : 'Permit hours, by the ticket record', s.inWeho ? 'West Hollywood’s posted hours make this block permit-only during your window.' : `${b.pwh} permit tickets were written here at these hours in the last 18 months.`];
+  else if (caution.length) v = [T.amber, 'Check the signs', caution.join(' · ')];
+  else if (s.mets.length && metersOn(b)) v = [T.green, 'Metered, nothing else in the data', `No sweeping, permit or event restriction covers this block in your window. ${record}`];
+  else if (s.mets.length) v = [T.unpainted, 'Not metered at these hours', `Meters here run ${meterHours(b).txt}, going by when meter tickets get written, and your window is outside that. No sweeping, permit or event restriction covers it either. ${record}`];
+  else if (b && b.rec === 0) v = [T['ink-3'], 'No data for this block', `Nothing in the city's records reaches this block: no sweeping route, no meter, no permit tickets, and no citation of any kind since ${since}. That's missing information, not permission — whatever is posted here, we can't see it.`];
+  else if (b && b.rec === 1) v = [T.amber, 'Ticketed here, but no rule mapped', `${tot} ticket${tot === 1 ? '' : 's'} written on this block since ${since}, yet no sweeping route, meter or permit street covers it. Something is posted that the city's own map doesn't show.`];
+  else if (!b && (s.ws.length || s.wp.length || s.wDist.length)) v = [T.unpainted, 'Nothing restricts this in your window', 'West Hollywood’s posted sweeping and permit hours are clear of your window. The city doesn’t publish citations, so there’s no ticket history to check against.'];
+  else if (!b) v = [T['ink-3'], 'No data for this spot', 'This point isn’t on a mapped block, so there’s nothing to report. Try clicking the street itself.'];
+  else v = [T.unpainted, 'Nothing restricts this in your window', `No sweeping route, permit street or event zone covers this block in your window. ${record}`];
+  const cityTxt = s.inWeho ? 'West Hollywood' : 'City of Los Angeles';
+  const fineOf = v => C.fines[v];
+  const lotsHTML = s.lots.map(([l, d]) => `<button class="li" data-lot="${lots.indexOf(l)}"><span class="p ${l.k === 'city' ? '' : l.acc === 'customers' ? 'c' : 'o'}">P</span><span>${esc(l.n || (l.k === 'garage' ? 'Parking garage' : 'Parking lot'))}<small>${esc(lotLine(l))}${l.src === 'LADOT' && l.sf ? ' · ' + esc(l.sf.slice(0, 110)) + (l.sf.length > 110 ? '…' : '') : ''}</small></span><span class="d">${Math.round(d / 10) * 10} m</span></button>`).join('');
+  el.innerHTML = `
+    <div class="sec">
+      <div class="dhead"><div><h2>${esc(s.label)}</h2><p>${esc(b ? blockTitle(b) + ' · ' : '')}${cityTxt}</p></div>${DBTNS}</div>
+      <div class="verdict" style="border-color:rgb(${v[0].join(',')});background:rgba(${v[0].join(',')},.10)"><b>${esc(v[1])}</b><span>${esc(winTxt)} · ${esc(v[2])}</span><span class="basis">What the city published and what was ticketed before — not a promise about today. Red curbs, hydrants and temporary signs are in no dataset, and the posted sign is the authority.</span>${reportLink(s.label + (b ? ' (' + blockTitle(b) + ')' : ''), v[1])}</div>
+    </div>
+    <div class="sec"><div class="lbl">What the signs say</div><div class="signs">${signs.join('')}</div></div>
+    ${b ? `<div class="sec"><h3 class="h3">${tot} ticket${tot === 1 ? '' : 's'} on this block since ${fmtISO(C.citeRange[0])}</h3>
+      ${tot ? `<div class="chart">${chartSVG(b)}</div><div class="cats">${CAT.map((c, i) => b.all[i] ? `<span class="k"><i style="background:rgb(${c.c().join(',')})"></i>${c.k}</span><span class="n">${b.all[i]}</span><span class="f">${b.win[i] ? b.win[i] + ' at your hours' : ''}</span>` : '').join('')}</div>
+      <div class="fine">Most written: ${b.top.slice(0, 3).map(([v, n]) => `${esc(title(v))} ×${n}${fineOf(v) ? ` ($${fineOf(v)})` : ''}`).join(' · ')}. Shaded columns are your window’s hours.</div>` : '<div class="note">No citations recorded on this block in six months.</div>'}</div>` : (s.inWeho ? '<div class="sec"><div class="note">Ticket history covers LA City only; West Hollywood doesn’t publish citations.</div></div>' : '')}
+    ${lotsHTML ? `<div class="sec"><div class="lbl">Off-street nearby</div><div class="list">${lotsHTML}</div></div>` : ''}
+    ${S.showSpeed && s.spd.length ? `<div class="sec"><div class="lbl">Speed cameras within 400 m</div><div class="list">${s.spd.map(([c, d]) => `<button class="li" data-spd="${speed.indexOf(c)}"><span class="spd"></span><span>${esc(c.st)}<small>${esc(c.from)} to ${esc(c.to)} · ${esc(speedStatus(c, a))}</small></span><span class="d">${d < 15 ? 'here' : Math.round(d / 10) * 10 + ' m'}</span></button>`).join('')}</div>
+      <div class="fine">LADOT tickets 11 mph or more over the limit by mail: $50 up to 15 over, $100 to 25, $200 above that, $500 at 100 mph. Each corridor starts with 60 days of warning notices.</div></div>` : ''}
+    ${S.showAlpr ? `<div class="sec"><div class="lbl">Plate readers within 400 m</div>${s.cams.length ? `<div class="list">${s.cams.map(([c, d]) => `<button class="li" data-cam="${alpr.indexOf(c)}"><span class="cm ${c.flock ? '' : 'o'}"></span><span>${c.flock ? 'Flock Safety' : esc(c.mfr || 'Unknown maker')}<small>${c.dirs.length ? 'Faces ' + c.dirs.map(compass).join(' & ') : 'Direction not mapped'}${c.op ? ' · ' + esc(c.op) : ''}</small></span><span class="d">${Math.round(d / 10) * 10} m</span></button>`).join('')}</div>` : '<div class="note">None mapped nearby.</div>'}
+      <div class="fine">Community-mapped in OpenStreetMap, the same data DeFlock shows, so coverage is incomplete.</div></div>` : ''}`;
+  el.hidden = false;
+  renderGameNote(); applySheet();
+  el.querySelectorAll('[data-cam]').forEach(n => n.onclick = () => fly(alpr[+n.dataset.cam].pos, Z.spot()));
+  el.querySelectorAll('[data-spd]').forEach(n => n.onclick = () => fly(speedMid(speed[+n.dataset.spd]), Z.addr()));
+  el.querySelectorAll('[data-lot]').forEach(n => n.onclick = () => { const l = lots[+n.dataset.lot]; fly(l.pos, Z.spot()); });
+}
+const fmtISO = s => { const [y, m, d] = s.split('-').map(Number); return MON[m - 1] + ' ' + d; };
+const fmtISOy = s => fmtISO(s) + ' ' + s.slice(0, 4);
+function fmtStamp(iso) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(iso.slice(0, 19) + 'Z')).map(x => [x.type, x.value]));
+  const t = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute); return fmtD(t) + ', ' + fmtT(t);
+}
+function dataAgeDays() { return Math.max(0, Math.round((laNow() - Date.parse(C.meta.built.slice(0, 10) + 'T12:00Z')) / DAY)); }
+function winLabel() {
+  const a = S.t0, b = S.t1, same = dayStart(a) === dayStart(b) || (b - dayStart(a) <= DAY && fmtT(b) === 'Midnight');
+  const today = dayStart(laNow()), dn = d => d === today ? 'Today' : d === today + DAY ? 'Tomorrow' : fmtD(d);
+  return same ? `${dn(dayStart(a))} ${fmtT(a)}–${fmtT(b)}` : `${dn(dayStart(a))} ${fmtT(a)} → ${dn(dayStart(b))} ${fmtT(b)}`;
+}
+
+// ---------- rail UI
+function renderLegend() {
+  const cnt = f => blocks.filter(f).length;
+  let items = [], sub = '';
+  if (S.mode === 'window') {
+    items = [[T.red, S.game ? 'Street cleaning or Dodger game restriction' : 'Street cleaning during your window', cnt(b => b.lvl === 5)], [T.blue, 'Permit tickets written at these hours', cnt(b => b.lvl === 4)],
+      [T.amber, 'Permit street (other hours) or heavy ticketing', cnt(b => b.lvl === 3)], [T.green, 'Metered', cnt(b => b.lvl === 2)],
+      [A(T.unpainted, 1), 'No rule in your window', cnt(b => b.lvl === 1 && b.rec > 0)],
+      [A(T['ink-3'], T.dark ? .35 : .45), 'No records at all for the block', cnt(b => b.lvl === 1 && b.rec === 0)]];
+  } else if (S.mode === 'tickets') {
+    const r = T.red, lo = T.dark ? [90, 60, 62] : [236, 180, 170], mix = t => [0, 1, 2].map(j => Math.round(lo[j] + (r[j] - lo[j]) * t));
+    const f = v => v < 10 ? v.toFixed(1) : Math.round(v);
+    items = [[mix(1), `${f(tBreaks[2])}+ per 100 m`, cnt(b => b.lvl === 4)], [mix(.7), `${f(tBreaks[1])}–${f(tBreaks[2])}`, cnt(b => b.lvl === 3)], [mix(.35), `${f(tBreaks[0])}–${f(tBreaks[1])}`, cnt(b => b.lvl === 2)], [mix(0), `under ${f(tBreaks[0])}`, cnt(b => b.lvl === 1)]];
+    sub = `<button class="chip" data-tc="-1" aria-pressed="${S.tcat < 0}">All</button>` + CAT.slice(0, 4).map((c, i) => `<button class="chip" data-tc="${i}" aria-pressed="${S.tcat === i}">${c.k.split(' ')[0] === 'Red' ? 'Red zone' : c.k.split(' ')[0]}</button>`).join('') +
+      `<label class="tg" style="font-size:13px;width:100%"><input type="checkbox" id="tAll" ${S.tAll ? 'checked' : ''}>All hours, not just your window’s</label>`;
+  } else if (S.mode === 'sweep') {
+    items = [[T.red, 'Swept during your window', cnt(b => b.lvl === 5)], [T.orange, 'Within 24 hrs of arriving', cnt(b => b.lvl === 4)], [T.amber, 'Within 3 days', cnt(b => b.lvl === 3)], [T.green, 'Later', cnt(b => b.lvl === 2)]];
+  } else {
+    items = [[T.blue, 'Permit tickets at these hours', cnt(b => b.lvl === 3)], [A(T.blue, .65), 'Permit tickets at other hours', cnt(b => b.lvl === 2)]];
+  }
+  $('#subopts').innerHTML = sub;
+  $('#legend').innerHTML = items.map(([c, t, n]) => `<div class="lg"><i style="background:rgba(${c[0]},${c[1]},${c[2]},${c[3] != null ? c[3] / 255 : 1})"></i><b>${t}</b><em>${n.toLocaleString()} blocks</em></div>`).join('') +
+    (S.mode === 'tickets' ? `<div class="fine">${S.tAll ? 'All' : 'Written during your window’s weekday-hours,'} ${fmtISO(C.citeRange[0])}–${fmtISO(C.citeRange[1])}. LA City only.</div>` : S.mode === 'window' ? '<div class="fine">West Hollywood blocks use the city’s own permit and sweeping schedules.</div>' : '');
+  $('#subopts').querySelectorAll('[data-tc]').forEach(n => n.onclick = () => { S.tcat = +n.dataset.tc; update(); });
+  const ta = $('#tAll'); if (ta) ta.onchange = () => { S.tAll = ta.checked; update(); };
+}
+// the game-day zone is an Echo Park problem; the note only appears for spots near the stadium
+function renderGameNote() {
+  const el = $('#gamenote'), show = S.sel && nearStadium(S.sel.pt), ng = S.game || nextGame(S.t0);
+  const sunset = ' Restrictions on Sunset Bl change on game days — temporary tow-away signs go up along the stadium approach.';
+  el.innerHTML = !show ? '' : S.game
+    ? `<b>Dodgers home vs ${esc(S.game.opp)}</b> · ${fmtD(S.game.t)}, ${fmtT(S.game.t)}. District D streets are permit-only from ${fmtT(S.game.t - PRE)}.${sunset}`
+    : ng ? `No Dodgers home game in this window. Next: ${fmtD(ng.t)}, ${fmtT(ng.t)} vs ${esc(ng.opp)}.${sunset}` : '';
+  el.hidden = !el.innerHTML;
+  el.classList.toggle('on', !!(show && S.game));
+}
+function update() {
+  computeWindow(); classify(); renderLegend();
+  $('#winsum').textContent = winLabel();
+  renderGameNote();
+  $('#dataage').innerHTML = `<b>Snapshot</b> tickets through ${fmtISO(C.citeRange[1])}, built ${esc(C.meta.built.slice(0, 10).split('-').slice(1).map(Number).join('/'))}${dataAgeDays() > 45 ? ` · ${dataAgeDays()} days old, enforcement may have changed` : ''}`;
+  $('#dataage').classList.toggle('stale', dataAgeDays() > 45);
+  if (S.sel) renderDetail();
+  redraw();
+}
+function setWindow(a, b) { S.t0 = a; S.t1 = Math.max(b, a + 15 * MIN); $('#t0').value = toInput(S.t0); $('#t1').value = toInput(S.t1); update(); }
+function preset(p) {
+  const now = laNow(), today = dayStart(now);
+  // the default covers the hour you've already been parked plus the next two
+  if (p === 'default') { const a = Math.floor((now - 36e5) / (15 * MIN)) * 15 * MIN; setWindow(a, a + 3 * 36e5); }
+  if (p === 'now') setWindow(Math.floor(now / (15 * MIN)) * 15 * MIN, Math.floor(now / (15 * MIN)) * 15 * MIN + 2 * 36e5);
+  if (p === 'tonight') { const d = now > today + 21.5 * 36e5 ? today + DAY : today; setWindow(d + 20 * 36e5, d + 22 * 36e5); }
+  if (p === 'overnight') { const d = now > today + 22 * 36e5 ? today + DAY : today; setWindow(d + 19 * 36e5, d + DAY + 9 * 36e5); }
+  if (p === 'tomorrow') setWindow(today + DAY + 9 * 36e5, today + DAY + 17 * 36e5);
+}
+$('#presets').onclick = e => { const p = e.target.dataset.p; if (p) preset(p); };
+$('#t0').onchange = () => { const a = fromInput($('#t0').value); if (!isNaN(a)) setWindow(a, S.t1 > a ? S.t1 : a + 2 * 36e5); };
+$('#t1').onchange = () => { const b = fromInput($('#t1').value); if (!isNaN(b)) setWindow(S.t0, b > S.t0 ? b : S.t0 + 2 * 36e5); };
+$('#mode').onclick = e => { const m = e.target.dataset.m; if (!m) return; S.mode = m; $('#mode').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.m === m)); update(); };
+$('#showMeters').onchange = e => { S.showMeters = e.target.checked; redraw(); };
+$('#showLots').onchange = e => { S.showLots = e.target.checked; redraw(); };
+$('#showDistricts').onchange = e => { S.showDistricts = e.target.checked; redraw(); };
+$('#showAlpr').onchange = e => { S.showAlpr = e.target.checked; redraw(); if (S.sel) renderDetail(); };
+$('#showSpeed').onchange = e => { S.showSpeed = e.target.checked; redraw(); if (S.sel) renderDetail(); };
+$('#railToggle').onclick = () => { const r = $('#rail'); r.classList.toggle('collapsed'); $('#railToggle').setAttribute('aria-expanded', !r.classList.contains('collapsed')); };
+
+// search
+const q = $('#q'), sugg = $('#sugg'); let sIdx = -1, sList = [];
+function go(text, pick) {
+  const pl = pick ? pick.place : /^\s*\d/.test(text) ? null : exactPlace(text);
+  if (pl) return goPlace(pl);
+  const g = geocode(text);
+  sugg.hidden = true;
+  if (!g) { q.setCustomValidity('Not found'); q.reportValidity(); setTimeout(() => q.setCustomValidity(''), 1500); return; }
+  q.value = g.label; if (isMobile()) q.blur(); S.touched = true;
+  fly(g.pt, g.num != null ? Z.addr() : Z.street()); query(g.pt[0], g.pt[1], g.label, g.num != null ? { base: g.street.base, num: g.num } : null);
+  setURL('?q=' + encodeURIComponent(g.label));
+}
+function goPlace(pl) {
+  sugg.hidden = true; q.value = pl.n; if (isMobile()) q.blur(); S.touched = true;
+  setURL('?q=' + encodeURIComponent(placeQ(pl)));
+  if (pl.hood) { clearSel(); setURL('?q=' + encodeURIComponent(pl.n)); fly(pl.pos, Z.street()); return; }
+  const g = placeSpot(pl);
+  fly(g.pt, Z.addr()); query(g.pt[0], g.pt[1], pl.n, g.num != null ? { base: g.street.base, num: g.num } : null);
+}
+// searches are linkable (?q=<address> or ?q=<place>); the 404 page's search box lands here too
+const setURL = s => { try { history.replaceState(null, '', s); } catch (e) {} };
+function clearSel() { S.sel = null; $('#detail').hidden = true; applySheet(); renderGameNote(); redraw(); setURL(location.pathname); }
+q.oninput = () => {
+  sList = suggestions(q.value); sIdx = -1;
+  sugg.innerHTML = sList.map((s, i) => `<button data-i="${i}">${esc(s.text)}<small>${esc(s.sub)}</small></button>`).join('');
+  sugg.hidden = !sList.length;
+};
+q.onkeydown = e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { if (!sList.length) return; e.preventDefault(); sIdx = (sIdx + (e.key === 'ArrowDown' ? 1 : -1) + sList.length) % sList.length; sugg.querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === sIdx)); }
+  // Enter on a half-typed street takes the top suggestion rather than failing on the partial
+  if (e.key === 'Enter') { e.preventDefault(); const it = sIdx >= 0 ? sList[sIdx] : (sList.length && !exactPlace(q.value) && !geocode(q.value)) ? sList[0] : null; it ? go(it.text, it) : go(q.value); }
+  if (e.key === 'Escape') sugg.hidden = true;
+};
+sugg.onmousedown = e => { const b = e.target.closest('button'); if (b) { e.preventDefault(); const it = sList[+b.dataset.i]; go(it.text, it); } };
+q.onblur = () => setTimeout(() => sugg.hidden = true, 100);
+
+// ---------- map setup
+readTokens();
+const el = $('#map');
+// fit the whole coverage area into the part of the screen the panels don't cover
+function fitView(withDetail) {
+  const w = el.clientWidth, h = el.clientHeight, wide = w > 900;
+  const left = wide ? 400 : 0, right = wide && withDetail ? 400 : 0, free = w - left - right;
+  const zw = Math.log2(free * .92 * 360 / (512 * .166)), zh = Math.log2(h * .86 * 360 / (512 * .07 * 1.206));
+  const zz = Math.min(Math.max(Math.min(zw, zh), 11), 14);
+  const shiftPx = (left - right) / 2;
+  return { longitude: -118.3125 - shiftPx * 360 / (512 * Math.pow(2, zz)), latitude: 34.0805, zoom: zz, pitch: 0, bearing: 0, minZoom: 11, maxZoom: 19 };
+}
+let vs = fitView(false); viewZoom = vs.zoom;
+function fly(pt, zoom) {
+  // on phones the peek sheet covers more of the bottom than the compact rail does the top, so land the point ~40px above center
+  const dy = isMobile() ? 40 * 129770 / Math.pow(2, zoom) / KY : 0;
+  vs = { ...vs, longitude: pt[0] + (innerWidth > 900 ? 0.0009 * Math.pow(2, 17 - zoom) : 0), latitude: pt[1] - dy, zoom, transitionDuration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 900, transitionInterpolator: new deck.FlyToInterpolator() };
+  deckgl.setProps({ viewState: vs });
+}
+let zb = Math.round(viewZoom * 5), mapUp = false;
+const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Inertia makes a drag coast to a stop, but deck applies it to pinches too: it estimates the pinch's
+// speed from the last two touch events, and when those land a few ms apart on a phone the estimate
+// explodes and the map shoots to full zoom. So pinches end where the fingers leave; drags still coast.
+// Wheel zoom stays unsmoothed: deck's smooth mode restarts a 250 ms tween from wherever the last one
+// had got to, so a fast scroll keeps losing ground and zooming feels slow. Trackpads send many small
+// events, which is smooth enough on its own now that layers() doesn't rebuild buffers mid-zoom.
+class MapCtl extends deck.MapController {
+  _onPinchEnd(e) { const i = this.inertia; this.inertia = 0; try { return super._onPinchEnd(e); } finally { this.inertia = i; } }
+}
+const noWebGL = () => { if (!mapUp) fail('Your browser couldn’t start WebGL, which this map needs to draw the streets. Another browser, or turning hardware acceleration on, usually fixes it.'); };
+deckgl = new deck.Deck({
+  parent: el, views: new deck.MapView({ repeat: false }), viewState: vs, controller: { type: MapCtl, doubleClickZoom: true, touchRotate: false, dragRotate: false, inertia: reduceMotion() ? false : 300, scrollZoom: { speed: 0.013, smooth: false } },
+  layers: [], getTooltip: tooltip, getCursor: ({ isHovering, isDragging }) => isDragging ? 'grabbing' : isHovering ? 'pointer' : 'crosshair',
+  // controlled view state: deck ignores an initialViewState equal to the last one, which made a
+  // second reset after a manual zoom do nothing
+  onViewStateChange: ({ viewState }) => { vs = viewState; deckgl.setProps({ viewState: vs }); viewZoom = viewState.zoom; const nb = Math.round(viewZoom * 5); if (nb !== zb) { zb = nb; redraw(); } },
+  onClick: info => { if (!info.coordinate) return; S.touched = true; const [lon, lat] = info.coordinate; if (info.layer && info.layer.id === 'lots' && info.object) { query(...info.object.pos, info.object.n || null); return; } query(lon, lat); },
+  onLoad: () => { mapUp = true; $('#loading').hidden = true; },
+  onError: e => { console.error(e); noWebGL(); },
+  style: { background: 'var(--ground)' }
+});
+setTimeout(noWebGL, 12000);
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const zoomBy = d => { vs = { ...vs, zoom: Math.min(19, Math.max(11, vs.zoom + d)), transitionDuration: reduceMotion() ? 0 : 320, transitionEasing: easeOut, transitionInterpolator: new deck.LinearInterpolator({ transitionProps: ['zoom'] }) }; deckgl.setProps({ viewState: vs }); };
+$('#zin').onclick = () => zoomBy(1);
+$('#zout').onclick = () => zoomBy(-1);
+$('#zfit').onclick = () => { vs = { ...fitView(!!S.sel), transitionDuration: 600, transitionInterpolator: new deck.FlyToInterpolator() }; deckgl.setProps({ viewState: vs }); };
+
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+const saved = store.get('curbwatch-theme');
+if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+function syncTheme() {
+  const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const val = dark ? 'dark' : 'light';
+  if (document.documentElement.dataset.theme !== val) document.documentElement.dataset.theme = val;
+  const b = $('#theme');
+  b.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+  b.title = dark ? 'Light theme' : 'Dark theme';
+}
+$('#theme').onclick = () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next; store.set('curbwatch-theme', next); syncTheme();
+};
+syncTheme();
+$('#reset').onclick = () => {
+  clearSel();
+  q.value = ''; sugg.hidden = true; sList = []; sIdx = -1;
+  S.mode = 'window'; S.tcat = -1; S.tAll = false;
+  $('#mode').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.m === 'window'));
+  S.showMeters = S.showLots = S.showAlpr = S.showSpeed = true; S.showDistricts = false;
+  for (const [id, on] of [['showMeters', true], ['showLots', true], ['showAlpr', true], ['showSpeed', true], ['showDistricts', false]]) $('#' + id).checked = on;
+  preset('default');
+  vs = { ...fitView(false), transitionDuration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 600, transitionInterpolator: new deck.FlyToInterpolator() };
+  deckgl.setProps({ viewState: vs });
+  if (innerWidth > 760) q.focus();
+};
+const onTheme = () => { syncTheme(); readTokens(); update(); };
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!store.get('curbwatch-theme')) { delete document.documentElement.dataset.theme; onTheme(); } });
+new MutationObserver(onTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+$('#sources').innerHTML = `Sources: Dodger Stadium home dates, LADOT meters &amp; sensors, StreetsLA sweeping routes, LA parking citations (${fmtISO(C.citeRange[0])}–${fmtISO(C.citeRange[1])}; permit tickets from ${fmtISOy(C.permitRange[0])}), City of West Hollywood GIS, LA County addresses, OpenStreetMap, plate-reader locations from OpenStreetMap as mapped for DeFlock (${alpr.length} in area, ${alpr.filter(a => a.flock).length} Flock), LADOT speed-camera corridors (${speed.length} in area, traced on OpenStreetMap streets). Built ${esc(C.meta.built)}.`;
+
+
+preset('default');
+// a linked search opens on that address; otherwise the map opens clean, no block selected
+const linked = new URLSearchParams(location.search).get('q');
+if (linked && (exactPlace(linked) || geocode(linked))) go(linked);
+else if (linked) setURL(location.pathname);
+else {
+  // the neighborhood pages link here with ?at=lon,lat,zoom to open the map on that area
+  const at = (new URLSearchParams(location.search).get('at') || '').split(',').map(Number);
+  if (at.length === 3 && at.every(Number.isFinite) && at[0] < -118 && at[0] > -119 && at[1] > 33 && at[1] < 35) { fly([at[0], at[1]], Math.min(Math.max(at[2], 11), 19)); setURL(location.pathname); }
+}
+document.fonts.ready.catch(() => {}).finally(() => { fontReady = true; redraw(); });
+
+// live occupancy (works where the page is allowed to reach data.lacity.org; otherwise the build snapshot stays)
+const ctl = new AbortController(); setTimeout(() => ctl.abort(), 8000);
+fetch('https://data.lacity.org/resource/e7h6-4a3e.json?$limit=60000', { signal: ctl.signal }).then(r => r.ok ? r.json() : Promise.reject()).then(rows => {
+  const m = new Map(rows.map(r => [r.spaceid, r])); let latest = '';
+  rows.forEach(r => { if (r.eventtime > latest) latest = r.eventtime; });
+  const lt = Date.parse(latest + 'Z');
+  for (const mt of meters) { const r = m.get(mt.id); if (!r) continue; mt.st = { OCCUPIED: 1, VACANT: 2 }[r.occupancystate] || 3; mt.age = Math.round((lt - Date.parse(r.eventtime + 'Z')) / MIN); }
+  occTime = latest; occLive = true; occFetched = Date.now(); redraw(); if (S.sel) renderDetail();
+}).catch(() => {});
+} catch (e) { console.error(e); fail('Something went wrong while setting it up.'); }
+})();
+</script>
+</body>
+</html>

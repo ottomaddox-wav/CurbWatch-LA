@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms &amp; Data Notes · CurbWatch LA</title>
+<meta name="description" content="Where CurbWatch LA's data comes from, how current it is, what it can't tell you, and what it stores about you (nothing).">
+<link rel="canonical" href="https://curbwatch.la/terms.html">
+<link rel="icon" href="/FAVICON2.png" type="image/png">
+<meta name="theme-color" content="#EEEAE1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1B18" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<script>try{const t=localStorage.getItem('curbwatch-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+:root{--ground:#EEEAE1;--panel:#FBFAF6;--ink:#2A2926;--ink-2:#6B675F;--ink-3:#9A958B;--line:#E2DDD1;--moss:#4E7A52;--red:#C8433B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#1C1B18;--panel:#26241F;--ink:#EDE9DF;--ink-2:#A9A497;--ink-3:#7D786C;--line:#3B3831;--moss:#7FB08A;--red:#E0625A}}
+:root[data-theme="dark"]{--ground:#1C1B18;--panel:#26241F;--ink:#EDE9DF;--ink-2:#A9A497;--ink-3:#7D786C;--line:#3B3831;--moss:#7FB08A;--red:#E0625A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.6 "Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:40rem;margin:0 auto;padding:56px 24px 96px}
+a{color:var(--moss)}
+.top{margin:0 0 32px;font-size:14px}
+.top a{text-decoration:none;font-weight:600}
+.top a:hover{text-decoration:underline}
+h1{font:600 38px/1.1 "Helvetica Neue",Helvetica,Arial,sans-serif;letter-spacing:-.02em;margin:0 0 6px}
+.sub{color:var(--ink-2);margin:0 0 40px}
+h2{font:600 21px/1.25 "Helvetica Neue",Helvetica,Arial,sans-serif;letter-spacing:-.02em;margin:38px 0 10px}
+p,li{color:var(--ink-2)}
+p{margin:0 0 14px}
+ul{margin:0 0 14px;padding-left:20px}
+li{margin-bottom:6px}
+strong{color:var(--ink);font-weight:600}
+.callout{background:var(--panel);border-left:4px solid var(--red);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.callout p:last-child{margin:0}
+footer{border-top:1px solid var(--line);margin-top:48px;padding-top:18px;font-size:13.5px;color:var(--ink-3)}
+</style>
+</head>
+<body>
+<main>
+  <p class="top"><a href="/">← CurbWatch LA</a></p>
+  <h1>Terms &amp; Data Notes</h1>
+  <p class="sub">What CurbWatch LA knows, how it knows it, and where its limits are.</p>
+
+  <div class="callout">
+    <p><strong>The posted sign is the authority. This map is not.</strong> Use it to plan, then read the
+    curb. If the two disagree, the sign wins, and a parking officer will agree with the sign. Please
+    report it to us!</p>
+  </div>
+
+  <h2>What this is</h2>
+  <p>A free, independent map of street-parking rules and enforcement for part of Los Angeles,
+  built from public records. It covers the City of Los Angeles and West Hollywood. Beverly Hills
+  falls inside the map's frame but outside its coverage; it doesn't publish this data, so the map
+  says so rather than guessing. It isn't affiliated with, endorsed by, or run by the City of
+  Los Angeles, LADOT, the City of West Hollywood, or any other agency or company. We are a very
+  small team behind this project.</p>
+
+  <h2>Where the data comes from</h2>
+  <ul>
+    <li><strong>City of Los Angeles</strong> — posted street-sweeping routes, street centerlines,
+    metered parking inventory and live meter occupancy, city-owned lots, and parking citations.</li>
+    <li><strong>City of West Hollywood</strong> — permit blocks and their posted hours, permit
+    districts, sweeping routes, and public parking.</li>
+    <li><strong>County of Los Angeles</strong> — address points and city boundaries.</li>
+    <li><strong>OpenStreetMap</strong> — streets, parks, off-street lots, plate-reader camera
+    locations, and the named places you can search for (shops, parks, schools, venues). © OpenStreetMap contributors, <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL 1.0</a>.
+    Those parts of the data file are a derivative database and stay under that license — see
+    <a href="https://github.com/ottomaddox-wav/CurbWatch-LA/blob/main/DATA-LICENSE.md">DATA-LICENSE.md</a>.</li>
+    <li><strong>Dodger Stadium home dates</strong> — kept by hand from the published schedule.</li>
+    <li><strong>LADOT speed cameras</strong> — the city's Speed Safety System corridors, kept by hand.</li>
+  </ul>
+
+  <h2>It is a snapshot</h2>
+  <p>The map carries a build date and the date its ticket records run through. Nothing updates
+  by itself between builds. Things change. An old snapshot stays confidently wrong, which is why
+  the date is on the screen and we will do our best to keep this updated frequently.</p>
+
+  <h2>Some of it is inferred, not official</h2>
+  <p>Los Angeles hasn't published a permit-district map since 2015, and that map no longer matches
+  the street. So some permit streets here are worked out from where permit tickets were actually
+  written, and the Dodger Stadium game-day zone is assembled the same way, from ticket patterns
+  and local knowledge. These are this project's inferences, labeled as such. They can be wrong in
+  both directions: a permit street nobody has ticketed yet looks identical to a free one.</p>
+
+  <h2>Silence isn't safety</h2>
+  <p>About a fifth of the blocks here have no records at all. No sweeping route, no meter, no
+  permit ticket, and no citation. The app says so plainly on those blocks rather than calling them
+  clear, because the city not having published something is not the same as the curb being free.
+  Another one in ten has tickets but no rule we can point to, which usually means a sign
+  exists that the city's own map doesn't carry. Again, please report these to us so we can keep
+  them updated!</p>
+  <p>Even the mapped rules have soft edges: LA's sweeping routes were digitized from paper maps
+  and the source itself calls them a visual reference, with segments that can be missing or
+  extraneous.</p>
+
+  <h2>What it can't see at all</h2>
+  <p>No dataset covers red curbs, hydrants, driveways, loading zones, temporary no-parking signs
+  for filming or construction, valet hours, or a sweeper that didn't show up. Ticket history
+  describes only the past.</p>
+
+  <h2>No warranty</h2>
+  <p>This is provided as is, without warranty of any kind. Parking decisions are yours, and so are
+  any citations, tows or fees that follow. Nothing here is legal advice. If you're contesting a
+  citation, LADOT's Initial Review process and the posted signage are what matter.</p>
+
+  <h2>Privacy</h2>
+  <p>No accounts, no tracking, no analytics, no advertising, no cookies. Nothing you search or
+  click is sent anywhere or recorded. Your chosen light or dark theme is stored in your own
+  browser and never leaves it. We care about your privacy, a lot.</p>
+  <p>Everything the page needs — the map library and the data — is served from this site, so no
+  third party sees you visit. The one outside request goes to the City of Los Angeles' public
+  meter-occupancy feed, so open spaces show current readings; it comes from your browser and
+  carries nothing about you beyond what any web request carries. If it fails, the map falls back
+  to the readings in the snapshot.</p>
+  <p>The citation data behind this map is aggregated by block before publishing. It contains no
+  license plates, vehicle details, ticket numbers or anything identifying a person — only counts,
+  violation types, times and fine amounts.</p>
+
+  <h2>Plate-reader cameras</h2>
+  <p>Camera locations come from OpenStreetMap, mapped by volunteers, the same public data DeFlock
+  displays. Coverage is incomplete, and a camera's absence here means nobody has mapped it, not
+  that it isn't there. Manufacturer names are shown to describe the hardware, nothing more.</p>
+
+  <h2>Speed cameras</h2>
+  <p>Speed-camera corridors come from LADOT's published list of its Speed Safety System sites,
+  entered by hand and traced onto OpenStreetMap streets between the cross streets the city names.
+  The dashed line marks the stretch, not where each camera stands. Each corridor starts with 60
+  days of mailed warning notices, then fines from $50 for driving 11 mph or more over the limit.
+  LADOT is switching on more of its 125 sites through the end of 2026; a stretch that isn't drawn
+  here may still have one.</p>
+
+  <h2>Corrections</h2>
+  <p>Found a block that's wrong? The gap between what's published and what's on the curb is the
+  whole point of this project. Please reach out to
+  <a href="mailto:hello@curbwatch.la?subject=CurbWatch%20LA%20correction">hello@curbwatch.la</a>
+  with the street, the block, and what the sign actually says. Thank you!</p>
+
+  <footer>
+    <p><a href="/">← Back to the map</a></p>
+  </footer>
+</main>
+</body>
+</html>
